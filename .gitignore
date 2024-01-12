@@ -1,10 +1,11 @@
+src/test/fuzz/fuzz.exe
+src/dashbls/*
 *.sublime-project
 *.sublime-workspace
 todo.txt
 reset-files.bash
 
 *.tar.gz
-
 *.exe
 src/dash
 src/dashd
