@@ -18,6 +18,7 @@
 #include <arith_uint256.h>
 
 #include <assert.h>
+#include <founder_payment.h>
 
 static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesisOutputScript, uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
@@ -222,6 +223,9 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_MN_RR].nThresholdMin = 2420;       // 60% of 4032
         consensus.vDeployments[Consensus::DEPLOYMENT_MN_RR].nFalloffCoeff = 5;          // this corresponds to 10 periods
         consensus.vDeployments[Consensus::DEPLOYMENT_MN_RR].useEHF = true;
+        // develover fee
+        std::vector<FounderRewardStructure> rewardStructures = {  {INT_MAX, 14} };
+        consensus.nFounderPayment = FounderPayment(rewardStructures, 420);
 
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000008d970bc6cda0b02b30fc"); // 1969000
@@ -421,6 +425,9 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_MN_RR].nThresholdMin = 60;         // 60% of 100
         consensus.vDeployments[Consensus::DEPLOYMENT_MN_RR].nFalloffCoeff = 5;          // this corresponds to 10 periods
         consensus.vDeployments[Consensus::DEPLOYMENT_MN_RR].useEHF = true;
+        // develover fee
+        std::vector<FounderRewardStructure> rewardStructures = {  {INT_MAX, 14} };
+        consensus.nFounderPayment = FounderPayment(rewardStructures, 420);
 
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x00000000000000000000000000000000000000000000000002d68d24632e300f"); // 905100
@@ -594,6 +601,9 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_MN_RR].nThresholdMin = 60;   // 60% of 100
         consensus.vDeployments[Consensus::DEPLOYMENT_MN_RR].nFalloffCoeff = 5;     // this corresponds to 10 periods
         consensus.vDeployments[Consensus::DEPLOYMENT_MN_RR].useEHF = true;
+        // develover fee
+        std::vector<FounderRewardStructure> rewardStructures = {  {INT_MAX, 14} };
+        consensus.nFounderPayment = FounderPayment(rewardStructures, 420);
 
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000000000000000000000000");
@@ -844,6 +854,9 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_MN_RR].nThresholdMin = 7;   // 60% of 7
         consensus.vDeployments[Consensus::DEPLOYMENT_MN_RR].nFalloffCoeff = 5;     // this corresponds to 10 periods
         consensus.vDeployments[Consensus::DEPLOYMENT_MN_RR].useEHF = true;
+        // develover fee
+        std::vector<FounderRewardStructure> rewardStructures = {  {INT_MAX, 14} };
+        consensus.nFounderPayment = FounderPayment(rewardStructures, 420);
 
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x00");

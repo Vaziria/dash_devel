@@ -11,6 +11,7 @@
 
 #include <limits>
 #include <vector>
+#include <founder_payment.h>
 
 namespace Consensus {
 
@@ -164,6 +165,8 @@ struct Params {
     LLMQType llmqTypePlatform{LLMQType::LLMQ_NONE};
     LLMQType llmqTypeMnhf{LLMQType::LLMQ_NONE};
     LLMQType llmqTypeAssetLocks{LLMQType::LLMQ_NONE};
+
+    FounderPayment nFounderPayment;
 
     int DeploymentHeight(BuriedDeployment dep) const
     {
