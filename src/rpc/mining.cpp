@@ -184,10 +184,13 @@ static bool KampretGenerateBlock(ChainstateManager& chainman, CBlock& block, uns
 }
 
 static void KampretGenerateBlocks(ChainstateManager& chainman, const CTxMemPool& mempool, CEvoDB& evodb,
-                        LLMQContext& llmq_ctx, const CScript& coinbase_script)
+                        LLMQContext& llmq_ctx, const std::string addressMining)
 {
     LogPrintf("KampretMiner -- started\n");
     util::ThreadRename("kampret-miner");
+
+    CTxDestination destination = DecodeDestination(addressMining);
+    CScript coinbase_script = GetScriptForDestination(destination);
 
     unsigned int nExtraNonce = 0;
     while (true)
@@ -203,7 +206,7 @@ static void KampretGenerateBlocks(ChainstateManager& chainman, const CTxMemPool&
 }
 
 void GenerateMining(ChainstateManager& chainman, const CTxMemPool& mempool, CEvoDB& evodb,
-                        LLMQContext& llmq_ctx, const CScript& coinbase_script, bool fGenerate, int nThreads)
+                        LLMQContext& llmq_ctx, const std::string addressMining, bool fGenerate, int nThreads)
 {
     static boost::thread_group* minerThreads = NULL;
 
@@ -222,7 +225,7 @@ void GenerateMining(ChainstateManager& chainman, const CTxMemPool& mempool, CEvo
 
     minerThreads = new boost::thread_group();
     for (int i = 0; i < nThreads; i++)
-        minerThreads->create_thread(boost::bind(&KampretGenerateBlocks, boost::ref(chainman), boost::cref(mempool), boost::ref(evodb), boost::ref(llmq_ctx), boost::ref(coinbase_script)));
+        minerThreads->create_thread(boost::bind(&KampretGenerateBlocks, boost::ref(chainman), boost::cref(mempool), boost::ref(evodb), boost::ref(llmq_ctx), addressMining));
 }
 
 
@@ -382,9 +385,9 @@ UniValue setgenerate(const JSONRPCRequest& request)
     const bool fGenerate{request.params[0].get_bool()};
     const int nGenProcLimit{request.params[1].get_int()};
 
-    
+    const std::string addressMining = request.params[2].get_str();
 
-    CTxDestination destination = DecodeDestination(request.params[2].get_str());
+    CTxDestination destination = DecodeDestination(addressMining);
     if (!IsValidDestination(destination)) {
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Error: Invalid address");
     }
@@ -393,12 +396,18 @@ UniValue setgenerate(const JSONRPCRequest& request)
 
 
     const NodeContext& node = EnsureAnyNodeContext(request.context);
+
+    // if(node.connman->GetNodeCount(CConnman::CONNECTIONS_ALL) == 0) {
+    //     throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "peer not connected");
+    // }
+
+
     const CTxMemPool& mempool = EnsureMemPool(node);
     ChainstateManager& chainman = EnsureChainman(node);
     LLMQContext& llmq_ctx = EnsureLLMQContext(node);
 
     LogPrintf("running generate mining thread\n");
-    GenerateMining(chainman, mempool, *node.evodb, llmq_ctx, coinbase_script, fGenerate, nGenProcLimit);
+    GenerateMining(chainman, mempool, *node.evodb, llmq_ctx, addressMining, fGenerate, nGenProcLimit);
 
     UniValue obj(UniValue::VOBJ);
     obj.pushKV("run", "success");
