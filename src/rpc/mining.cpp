@@ -397,9 +397,9 @@ UniValue setgenerate(const JSONRPCRequest& request)
 
     const NodeContext& node = EnsureAnyNodeContext(request.context);
 
-    // if(node.connman->GetNodeCount(CConnman::CONNECTIONS_ALL) == 0) {
-    //     throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "peer not connected");
-    // }
+    if(node.connman->GetNodeCount(CConnman::CONNECTIONS_ALL) == 0) {
+        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "peer not connected");
+    }
 
 
     const CTxMemPool& mempool = EnsureMemPool(node);
