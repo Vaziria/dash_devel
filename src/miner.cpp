@@ -38,6 +38,8 @@
 
 #include <algorithm>
 #include <utility>
+#include <util/thread.h>
+#include <util/threadnames.h>
 
 int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParams, const CBlockIndex* pindexPrev)
 {

@@ -176,6 +176,8 @@ public:
 bool IsDeprecatedRPCEnabled(const std::string& method);
 
 extern CRPCTable tableRPC;
+extern UniValue getgenerate(const JSONRPCRequest& request);
+extern UniValue setgenerate(const JSONRPCRequest& request);
 
 void StartRPC();
 void InterruptRPC();

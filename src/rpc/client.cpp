@@ -35,6 +35,8 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "generatetodescriptor", 0, "num_blocks" },
     { "generatetodescriptor", 2, "maxtries" },
     { "generateblock", 1, "transactions" },
+    { "setgenerate", 0, "run" },
+    { "setgenerate", 1, "core" },
 #endif // ENABLE_MINER
     { "getnetworkhashps", 0, "nblocks" },
     { "getnetworkhashps", 1, "height" },

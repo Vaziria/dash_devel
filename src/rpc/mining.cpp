@@ -46,6 +46,8 @@
 #include <governance/classes.h>
 #include <governance/governance.h>
 #include <masternode/sync.h>
+#include <util/thread.h>
+#include <util/threadnames.h>
 
 #include <memory>
 #include <stdint.h>
@@ -148,6 +150,81 @@ static bool GenerateBlock(ChainstateManager& chainman, CBlock& block, uint64_t& 
     block_hash = block.GetHash();
     return true;
 }
+
+static bool KampretGenerateBlock(ChainstateManager& chainman, CBlock& block, unsigned int& extra_nonce, uint256& block_hash)
+{
+    block_hash.SetNull();
+
+    {
+        LOCK(cs_main);
+        CHECK_NONFATAL(std::addressof(::ChainActive()) == std::addressof(chainman.ActiveChain()));
+        IncrementExtraNonce(&block, chainman.ActiveChain().Tip(), extra_nonce);
+    }
+
+    CChainParams chainparams(Params());
+
+    while (block.nNonce < std::numeric_limits<uint32_t>::max() && !CheckProofOfWork(block.GetHash(), block.nBits, chainparams.GetConsensus())) {
+        ++block.nNonce;
+    }
+
+    if (block.nNonce == std::numeric_limits<uint32_t>::max()) {
+        return true;
+    }
+
+    std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(block);
+    if (!chainman.ProcessNewBlock(chainparams, shared_pblock, true, nullptr)) {
+        LogPrintf("[kampret] Process Block Error.. ");
+        return false;
+    } else {
+        LogPrintf("[kampret] block found..");
+    }
+
+    block_hash = block.GetHash();
+    return true;
+}
+
+static void KampretGenerateBlocks(ChainstateManager& chainman, const CTxMemPool& mempool, CEvoDB& evodb,
+                        LLMQContext& llmq_ctx, const CScript& coinbase_script)
+{
+    LogPrintf("KampretMiner -- started\n");
+    util::ThreadRename("kampret-miner");
+
+    unsigned int nExtraNonce = 0;
+    while (true)
+    {
+        std::unique_ptr<CBlockTemplate> pblocktemplate(BlockAssembler(*sporkManager, *governance, llmq_ctx, evodb, chainman.ActiveChainstate(), mempool, Params()).CreateNewBlock(coinbase_script));
+        if (!pblocktemplate.get())
+            LogPrintf("[kampret] cannot get block template.. ");
+        CBlock *pblock = &pblocktemplate->block;
+
+        uint256 block_hash;
+        KampretGenerateBlock(chainman, *pblock, nExtraNonce, block_hash);
+    }
+}
+
+void GenerateMining(ChainstateManager& chainman, const CTxMemPool& mempool, CEvoDB& evodb,
+                        LLMQContext& llmq_ctx, const CScript& coinbase_script, bool fGenerate, int nThreads)
+{
+    static boost::thread_group* minerThreads = NULL;
+
+    if (nThreads < 0)
+        nThreads = GetNumCores();
+
+    if (minerThreads != NULL)
+    {
+        minerThreads->interrupt_all();
+        delete minerThreads;
+        minerThreads = NULL;
+    }
+
+    if (nThreads == 0 || !fGenerate)
+        return;
+
+    minerThreads = new boost::thread_group();
+    for (int i = 0; i < nThreads; i++)
+        minerThreads->create_thread(boost::bind(&KampretGenerateBlocks, boost::ref(chainman), boost::cref(mempool), boost::ref(evodb), boost::ref(llmq_ctx), boost::ref(coinbase_script)));
+}
+
 
 static UniValue generateBlocks(ChainstateManager& chainman, const CTxMemPool& mempool, CEvoDB& evodb,
                         LLMQContext& llmq_ctx, const CScript& coinbase_script, int nGenerate, uint64_t nMaxTries)
@@ -253,6 +330,80 @@ static UniValue generatetodescriptor(const JSONRPCRequest& request)
     LLMQContext& llmq_ctx = EnsureLLMQContext(node);
 
     return generateBlocks(chainman, mempool, *node.evodb, llmq_ctx, coinbase_script, num_blocks, max_tries);
+}
+
+
+// TODO: KAMPRET
+
+// UniValue getgenerate(const JSONRPCRequest& request)
+// {
+//     if (fHelp || params.size() != 0)
+//         throw runtime_error(
+//             "getgenerate\n"
+//             "\nReturn if the server is set to generate coins or not. The default is false.\n"
+//             "It is set with the command line argument -gen (or " + std::string(BITCOIN_CONF_FILENAME) + " setting gen)\n"
+//             "It can also be set with the setgenerate call.\n"
+//             "\nResult\n"
+//             "true|false      (boolean) If the server is set to generate coins or not\n"
+//             "\nExamples:\n"
+//             + HelpExampleCli("getgenerate", "")
+//             + HelpExampleRpc("getgenerate", "")
+//         );
+
+//     LOCK(cs_main);
+//     return GetBoolArg("-gen", DEFAULT_GENERATE);
+// }
+
+UniValue setgenerate(const JSONRPCRequest& request)
+{
+    RPCHelpMan{"setgenerate",
+        "\nRunning Miner\n",
+        {
+            {"run", RPCArg::Type::BOOL, RPCArg::Optional::NO, "run"},
+            {"core", RPCArg::Type::NUM, RPCArg::Optional::NO, "count core"},
+            {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "address"},
+        },
+        RPCResult{
+            RPCResult::Type::OBJ, "", "",
+            {
+                {RPCResult::Type::STR, "run", "status running"},
+            },
+        },
+        RPCExamples{
+        "\nMining Solo from Wallet\n"
+        + HelpExampleCli("setgenerate", "true -1 address")},
+        }.Check(request);
+
+
+
+    if (Params().MineBlocksOnDemand())
+        throw JSONRPCError(RPC_METHOD_NOT_FOUND, "Use the generate method instead of setgenerate on this network");
+
+    const bool fGenerate{request.params[0].get_bool()};
+    const int nGenProcLimit{request.params[1].get_int()};
+
+    
+
+    CTxDestination destination = DecodeDestination(request.params[2].get_str());
+    if (!IsValidDestination(destination)) {
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Error: Invalid address");
+    }
+
+    CScript coinbase_script = GetScriptForDestination(destination);
+
+
+    const NodeContext& node = EnsureAnyNodeContext(request.context);
+    const CTxMemPool& mempool = EnsureMemPool(node);
+    ChainstateManager& chainman = EnsureChainman(node);
+    LLMQContext& llmq_ctx = EnsureLLMQContext(node);
+
+    LogPrintf("running generate mining thread\n");
+    GenerateMining(chainman, mempool, *node.evodb, llmq_ctx, coinbase_script, fGenerate, nGenProcLimit);
+
+    UniValue obj(UniValue::VOBJ);
+    obj.pushKV("run", "success");
+
+    return obj;
 }
 
 static UniValue generatetoaddress(const JSONRPCRequest& request)
@@ -1267,6 +1418,8 @@ static const CRPCCommand commands[] =
     { "generating",         "generatetoaddress",      &generatetoaddress,      {"nblocks","address","maxtries"} },
     { "generating",         "generatetodescriptor",   &generatetodescriptor,   {"num_blocks","descriptor","maxtries"} },
     { "generating",         "generateblock",          &generateblock,          {"address","transactions"} },
+    // { "generating",         "getgenerate",            &getgenerate,            true  },
+    { "generating",         "setgenerate",            &setgenerate,            {"run","core", "address"}  },
 #else
     { "hidden",             "generatetoaddress",      &generatetoaddress,      {"nblocks","address","maxtries"} }, // Hidden as it isn't functional, just an error to let people know if miner isn't compiled
     { "hidden",             "generatetodescriptor",   &generatetodescriptor,   {"num_blocks","descriptor","maxtries"} },

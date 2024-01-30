@@ -12,7 +12,9 @@ namespace util {
  * A wrapper for do-something-once thread functions.
  */
 void TraceThread(const char* thread_name, std::function<void()> thread_func);
+void SetThreadPriority(int nPriority);
 
 } // namespace util
 
 #endif // BITCOIN_UTIL_THREAD_H
+
