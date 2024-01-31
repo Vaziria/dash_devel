@@ -226,7 +226,7 @@ public:
         consensus.DIP0024Height = 1737792; // 0000000000000001342be9c0b75ad40c276beaad91616423c4d9cb101b3db438
         consensus.V19Height = 1899072; // 0000000000000015e32e73052d663626327004c81c5c22cb8b42c361015c0eae
         consensus.MinBIP9WarningHeight = 1899072 + 2016; // V19 activation height + miner confirmation window
-        consensus.powLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~uint256(0) >> 20
+        consensus.powLimit = uint256S("00ffffffff000000000000000000000000000000000000000000000000000000"); // ~uint256(0) >> 20
         consensus.nPowTargetTimespan = 24 * 60 * 60; // Dash: 1 day
         consensus.nPowTargetSpacing = 2.5 * 60; // Dash: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = false;
@@ -258,10 +258,10 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_MN_RR].useEHF = true;
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000008d970bc6cda0b02b30fc"); // 1969000
+        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000000000000000"); // 1969000
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x00000170b0418aaf1176dcabdbda90da666750398b335d1c1b1bbc258f0b5125"); // 1969000
+        consensus.defaultAssumeValid = uint256S("0x0017fce2ed9ebf99af872cf4f0ac3ca59118e18deedafe24d847498c63ed7df6"); // 1969000
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
@@ -279,10 +279,23 @@ public:
         m_assumed_blockchain_size = 45;
         m_assumed_chain_state_size = 1;
 
-        genesis = CreateGenesisBlock(1705981380, 2475818, 0x1e0ffff0, 1, 50000 * COIN);
 
+        // genesis is CBlock(hash=0017fce2ed9ebf99af872cf4f0ac3ca59118e18deedafe24d847498c63ed7df6, ver=0x00000001, hashPrevBlock=0000000000000000000000000000000000000000000000000000000000000000, hashMerkleRoot=b260f9816a946e07c49343faf8d300e88370ad9de6ce925f0841a9a3aea16e76, nTime=1705981380, nBits=20001fff, nNonce=1928, vtx=1)
+        // CTransaction(hash=b260f9816a, ver=1, type=0, vin.size=1, vout.size=1, nLockTime=0, vExtraPayload.size=0)
+        //     CTxIn(COutPoint(0000000000000000000000000000000000000000000000000000000000000000, 4294967295), coinbase 04ffff001d01040a636c6f776e2066697368)
+        //     CTxOut(nValue=50000.00000000, scriptPubKey=41040184710fa689ad5023690c80f3)
+
+
+
+        // pow is 0017fce2ed9ebf99af872cf4f0ac3ca59118e18deedafe24d847498c63ed7df6
+
+        // genesisNonce is 1928
+        // Genesis Merkle b260f9816a946e07c49343faf8d300e88370ad9de6ce925f0841a9a3aea16e76
+
+        genesis = CreateGenesisBlock(1705981380, 1928, 0x20001fff, 1, 50000 * COIN);
+        // MiningGenesisBlock(1705981380, 0x20001fff, 1, 50000 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x00000170b0418aaf1176dcabdbda90da666750398b335d1c1b1bbc258f0b5125"));
+        assert(consensus.hashGenesisBlock == uint256S("0x0017fce2ed9ebf99af872cf4f0ac3ca59118e18deedafe24d847498c63ed7df6"));
         assert(genesis.hashMerkleRoot == uint256S("0xb260f9816a946e07c49343faf8d300e88370ad9de6ce925f0841a9a3aea16e76"));
 
         // Note that of those which support the service bits prefix, most only support a subset of
@@ -432,7 +445,7 @@ public:
         consensus.nMinimumChainWork = uint256S("0x00000000000000000000000000000000000000000000000002d68d24632e300f"); // 905100
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("000003afeca827ca3d3bb14075938583f0d4424d29d1c99ecf8b49f50c78716b"); // 905100
+        consensus.defaultAssumeValid = uint256S("0014213d75de11368dd8072d50856b0c5799dab548a2fa58a9f0fea5591fe473"); // 905100
 
         pchMessageStart[0] = 0xce;
         pchMessageStart[1] = 0xe2;
@@ -445,11 +458,23 @@ public:
         m_assumed_blockchain_size = 4;
         m_assumed_chain_state_size = 1;
 
-        genesis = CreateGenesisBlock(1390666206UL, 288535, 0x1e0ffff0, 1, 50000 * COIN);
-        // MiningGenesisBlock(1390666206UL, 0x1e0ffff0, 1, 50000 * COIN);
+        // genesis is CBlock(hash=0014213d75de11368dd8072d50856b0c5799dab548a2fa58a9f0fea5591fe473, ver=0x00000001, hashPrevBlock=0000000000000000000000000000000000000000000000000000000000000000, hashMerkleRoot=b260f9816a946e07c49343faf8d300e88370ad9de6ce925f0841a9a3aea16e76, nTime=1390666206, nBits=20001fff, nNonce=2233, vtx=1)
+        // CTransaction(hash=b260f9816a, ver=1, type=0, vin.size=1, vout.size=1, nLockTime=0, vExtraPayload.size=0)
+        //     CTxIn(COutPoint(0000000000000000000000000000000000000000000000000000000000000000, 4294967295), coinbase 04ffff001d01040a636c6f776e2066697368)
+        //     CTxOut(nValue=50000.00000000, scriptPubKey=41040184710fa689ad5023690c80f3)
+
+
+
+        // pow is 0014213d75de11368dd8072d50856b0c5799dab548a2fa58a9f0fea5591fe473
+
+        // genesisNonce is 2233
+        // Genesis Merkle b260f9816a946e07c49343faf8d300e88370ad9de6ce925f0841a9a3aea16e76
+
+        genesis = CreateGenesisBlock(1390666206UL, 2233, 0x20001fff, 1, 50000 * COIN);
+        // MiningGenesisBlock(1390666206UL, 0x20001fff, 1, 50000 * COIN);
 
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x000003afeca827ca3d3bb14075938583f0d4424d29d1c99ecf8b49f50c78716b"));
+        assert(consensus.hashGenesisBlock == uint256S("0x0014213d75de11368dd8072d50856b0c5799dab548a2fa58a9f0fea5591fe473"));
         assert(genesis.hashMerkleRoot == uint256S("0xb260f9816a946e07c49343faf8d300e88370ad9de6ce925f0841a9a3aea16e76"));
 
         vFixedSeeds.clear();
@@ -872,11 +897,24 @@ public:
         UpdateDIP8ParametersFromArgs(args);
         UpdateBudgetParametersFromArgs(args);
 
-        genesis = CreateGenesisBlock(1417713337, 0, 0x207fffff, 1, 5000 * COIN);
-        // MiningGenesisBlock(1417713337, 0x207fffff, 1, 5000 * COIN);
+        // genesis is CBlock(hash=000198678fb274d47b07d500a45e7fd5dcda745c96a37c11cae45c2bd32b5331, ver=0x00000001, hashPrevBlock=0000000000000000000000000000000000000000000000000000000000000000, hashMerkleRoot=b260f9816a946e07c49343faf8d300e88370ad9de6ce925f0841a9a3aea16e76, nTime=1417713337, nBits=20001fff, nNonce=1061, vtx=1)
+        // CTransaction(hash=b260f9816a, ver=1, type=0, vin.size=1, vout.size=1, nLockTime=0, vExtraPayload.size=0)
+        //     CTxIn(COutPoint(0000000000000000000000000000000000000000000000000000000000000000, 4294967295), coinbase 04ffff001d01040a636c6f776e2066697368)
+        //     CTxOut(nValue=50000.00000000, scriptPubKey=41040184710fa689ad5023690c80f3)
+
+
+
+        // pow is 000198678fb274d47b07d500a45e7fd5dcda745c96a37c11cae45c2bd32b5331
+
+        // genesisNonce is 1061
+        // Genesis Merkle b260f9816a946e07c49343faf8d300e88370ad9de6ce925f0841a9a3aea16e76
+
+        genesis = CreateGenesisBlock(1417713337, 1061, 0x20001fff, 1, 50000 * COIN);
+        // MiningGenesisBlock(1417713337, 0x20001fff, 1, 50000 * COIN);
+
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x5dc540458002a8ab34dd5f67776f39b82a8d1e0973f74d578066adbe7da44c8e"));
-        assert(genesis.hashMerkleRoot == uint256S("0x6c88e9b3c5967c0646c460019c84283a7b994532d432b782ecdeba6087ea43a4"));
+        assert(consensus.hashGenesisBlock == uint256S("0x000198678fb274d47b07d500a45e7fd5dcda745c96a37c11cae45c2bd32b5331"));
+        assert(genesis.hashMerkleRoot == uint256S("0xb260f9816a946e07c49343faf8d300e88370ad9de6ce925f0841a9a3aea16e76"));
 
         vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.
         vSeeds.clear();      //!< Regtest mode doesn't have any DNS seeds.
