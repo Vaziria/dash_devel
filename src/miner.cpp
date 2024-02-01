@@ -246,6 +246,9 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
     // get some info back to pass to getblocktemplate
     MasternodePayments::FillBlockPayments(spork_manager, governance_manager, coinbaseTx, pindexPrev, blockSubsidy, nFees, pblocktemplate->voutMasternodePayments, pblocktemplate->voutSuperblockPayments);
 
+    FounderPayment founderPayment = chainparams.GetConsensus().nFounderPayment;
+    founderPayment.FillFounderPayment(coinbaseTx, nHeight, blockReward, pblock->txoutFounder);
+
     pblock->vtx[0] = MakeTransactionRef(std::move(coinbaseTx));
     pblocktemplate->vTxFees[0] = -nFees;
 

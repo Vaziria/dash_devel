@@ -7,6 +7,7 @@
 #define BITCOIN_CONSENSUS_PARAMS_H
 
 #include <uint256.h>
+#include <founder_payment.h>
 #include <llmq/params.h>
 
 #include <limits>
@@ -163,6 +164,8 @@ struct Params {
     LLMQType llmqTypeDIP0024InstantSend{LLMQType::LLMQ_NONE};
     LLMQType llmqTypePlatform{LLMQType::LLMQ_NONE};
     LLMQType llmqTypeMnhf{LLMQType::LLMQ_NONE};
+
+    FounderPayment nFounderPayment;
 
     int DeploymentHeight(BuriedDeployment dep) const
     {

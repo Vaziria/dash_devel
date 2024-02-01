@@ -665,6 +665,7 @@ libbitcoin_consensus_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libbitcoin_consensus_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_consensus_a_SOURCES = \
   amount.h \
+  founder_payment.h \
   arith_uint256.cpp \
   arith_uint256.h \
   bls/bls.cpp \
@@ -707,6 +708,7 @@ libbitcoin_common_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_common_a_SOURCES = \
   base58.cpp \
   bech32.cpp \
+  founder_payment.cpp \
   bip39.cpp \
   bloom.cpp \
   chainparams.cpp \
