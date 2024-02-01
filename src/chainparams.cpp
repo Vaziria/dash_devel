@@ -209,7 +209,7 @@ public:
         consensus.nSuperblockMaturityWindow = 1662; // ~(60*24*3)/2.6, ~3 days before actual Superblock is emitted
 
         std::vector<FounderRewardStructure> rewardStructures = {  {INT_MAX, 5} };// 5% founder/dev fee forever
-        consensus.nFounderPayment = FounderPayment(rewardStructures, 250);
+        consensus.nFounderPayment = FounderPayment(rewardStructures, 0);
 
         consensus.nGovernanceMinQuorum = 10;
         consensus.nGovernanceFilterElements = 20000;
@@ -232,7 +232,7 @@ public:
         consensus.MinBIP9WarningHeight = 1899072 + 2016; // V19 activation height + miner confirmation window
         consensus.powLimit = uint256S("00ffffffff000000000000000000000000000000000000000000000000000000"); // ~uint256(0) >> 20
         consensus.nPowTargetTimespan = 24 * 60 * 60; // Dash: 1 day
-        consensus.nPowTargetSpacing = 2.5 * 60; // Dash: 2.5 minutes
+        consensus.nPowTargetSpacing = 60; // Dash: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
         consensus.nPowKGWHeight = 15200;

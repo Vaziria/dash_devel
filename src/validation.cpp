@@ -1180,6 +1180,11 @@ static std::pair<CAmount, CAmount> GetBlockSubsidyHelper(int nPrevBits, int nPre
         // Once v20 is active, the treasury is 20% instead of 10%
         nSuperblockPart = nSubsidy / (fV20Active ? 5 : 10);
     }
+
+    // modif kampret
+    nSubsidy = 5000 * COIN;
+    nSuperblockPart = 0;
+
     return {nSubsidy - nSuperblockPart, nSuperblockPart};
 }
 
