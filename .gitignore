@@ -1,3 +1,6 @@
+src/omine
+src/omine.exe
+fuzz.exe
 workspace
 *.sublime-project
 *.sublime-workspace
