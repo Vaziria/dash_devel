@@ -707,6 +707,13 @@ bool IsV19Active(gsl::not_null<const CBlockIndex*> pindex)
 
 bool IsV20Active(gsl::not_null<const CBlockIndex*> pindex)
 {
+    int nMnCountEnabled = deterministicMNManager->GetListAtChainTip().GetValidMNsCount();
+    int mnMinimal = Params().GetConsensus().DIP0003MinimumCount;
+    
+    if(nMnCountEnabled < mnMinimal) {
+        return false;
+    }
+
     return llmq_versionbitscache.State(pindex, Params().GetConsensus(), Consensus::DEPLOYMENT_V20) == ThresholdState::ACTIVE;
 }
 

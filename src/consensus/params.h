@@ -115,6 +115,7 @@ struct Params {
     int DIP0001Height;
     /** Block height at which DIP0002 and DIP0003 (txv3 and deterministic MN lists) becomes active */
     int DIP0003Height;
+    int DIP0003MinimumCount;
     /** Block height at which DIP0003 becomes enforced */
     int DIP0003EnforcementHeight;
     uint256 DIP0003EnforcementHash;
