@@ -1209,7 +1209,20 @@ CAmount GetBlockSubsidy(const CBlockIndex* const pindex, const Consensus::Params
 
 CAmount GetMasternodePayment(int nHeight, CAmount blockValue, bool fV20Active)
 {
+
     CAmount ret = blockValue/5; // start at 20%
+
+    int nMnCountEnabled = deterministicMNManager->GetListAtChainTip().GetValidMNsCount();
+    int mnMinimal = Params().GetConsensus().DIP0003MinimumCount;
+    LogPrintf("[ kampretMnValid ] masternode enable %d -- masternode minimal  %d \n", nMnCountEnabled, mnMinimal);
+    if(nMnCountEnabled < mnMinimal) {
+        
+        ret = 0;
+        return ret;
+    }
+
+
+    
 
     const int nMNPIBlock = Params().GetConsensus().nMasternodePaymentsIncreaseBlock;
     const int nMNPIPeriod = Params().GetConsensus().nMasternodePaymentsIncreasePeriod;
