@@ -939,13 +939,18 @@ bool CCoinJoinClientSession::DoAutomaticDenominating(CConnman& connman, CBlockPo
 
     // Always attempt to join an existing queue
     if (JoinExistingQueue(nBalanceNeedsAnonymized, connman)) {
+        LogPrintf("[kampret] Join Queue \n");
         return true;
     }
 
     // If we were unable to find/join an existing queue then start a new one.
-    if (StartNewQueue(nBalanceNeedsAnonymized, connman)) return true;
+    if (StartNewQueue(nBalanceNeedsAnonymized, connman)) {
+        LogPrintf("[kampret] new Queue \n");
+        return true;
+    }
 
     strAutoDenomResult = _("No compatible Masternode found.");
+    LogPrintf("[kampret] new Queue No compatible Masternode found.\n");
     return false;
 }
 
@@ -1055,6 +1060,8 @@ bool CCoinJoinClientSession::JoinExistingQueue(CAmount nBalanceNeedsAnonymized, 
     const auto mnList = deterministicMNManager->GetListAtChainTip();
     const int nWeightedMnCount = mnList.GetValidWeightedMNsCount();
 
+    LogPrintf("[kampret] new Queue %d\n", nWeightedMnCount);
+
     // Look through the queues and see if anything matches
     CCoinJoinQueue dsq;
     while (m_queueman->GetQueueItemAndTry(dsq)) {
@@ -1109,7 +1116,10 @@ bool CCoinJoinClientSession::JoinExistingQueue(CAmount nBalanceNeedsAnonymized, 
 
 bool CCoinJoinClientSession::StartNewQueue(CAmount nBalanceNeedsAnonymized, CConnman& connman)
 {
-    if (!CCoinJoinClientOptions::IsEnabled()) return false;
+    const bool coinJoinEnabled = CCoinJoinClientOptions::IsEnabled();
+    
+
+    if (!coinJoinEnabled) return false;
     if (nBalanceNeedsAnonymized <= 0) return false;
 
     int nTries = 0;
