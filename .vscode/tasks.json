@@ -1,6 +1,38 @@
 {
     "version": "2.0.0",
+    "inputs": [
+        {
+          "id": "fileLocation",
+          "type": "promptString",
+          "description": "file yang akan diupload ke ssh"
+          // type specific configuration attributes
+        }
+      ],
     "tasks": [
+        {
+            "label": "Plan Refactor Name",
+            "detail": "Plan renaming coin, rename ticker dan nama coin",
+            "type": "shell",
+            "command": "python3 -m refactor_tools.plan_rename",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Echo Task",
+            "type": "shell",
+            "command": [
+                "echo \"asdasdasd\" &&",
+                "echo \"asdasdasdasd\" &&",
+                "echo ${input:fileLocation}"
+                
+            ],
+            "detail": "echo task",
+            "problemMatcher": [],
+            
+        },
+
         {
             "label": "Build",
             "type": "shell",
@@ -37,7 +69,8 @@
             "group": {
                 "kind": "test",
                 "isDefault": true
-            }
+            },
+            "detail": "Running All Unit Testing Coin "
         },
         {
             "label": "Clean",
@@ -52,7 +85,8 @@
             },
             "options": {
                 "cwd": "${workspaceFolder}"
-            }
+            },
+            "detail": "Clean Data Build On Coin"
         },
         {
             "type": "cppbuild",

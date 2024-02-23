@@ -1,8 +1,27 @@
 {
     "configurations": [
-        
         {
-            "name": "(gdb) Launch",
+            "name": "Launch Over SSH",
+            "type": "gdb",
+            "request": "launch",
+            "target": "${workspaceFolder}/src/dashd",
+            "arguments": "-printtoconsole",
+            "cwd": "${workspaceRoot}",
+            "ssh": {
+                "host": "188.166.106.146",
+                "cwd": "/root/dash",
+                "keyfile": "/root/workspace/credentials/id_rsa",
+                "user": "root",
+                // "forwardX11": true,
+                // "x11host": "localhost",
+                // "x11port": 6000
+                
+            },
+            "valuesFormatting": "parseText",
+            "preLaunchTask": "",
+        },
+        {
+            "name": "Debugging Daemon",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/src/dashd",
@@ -29,7 +48,7 @@
         },
 
         {
-            "name": "Launch Qt",
+            "name": "Debugging Qt",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/src/qt/dash-qt",
@@ -65,32 +84,8 @@
         },
 
 
-        {
-            "name": "C/C++: g++ build and debug active file",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${fileDirname}/${fileBasenameNoExtension}",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${fileDirname}",
-            "environment": [],
-            "externalConsole": false,
-            "MIMode": "gdb",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                },
-                {
-                    "description": "Set Disassembly Flavor to Intel",
-                    "text": "-gdb-set disassembly-flavor intel",
-                    "ignoreFailures": true
-                }
-            ],
-            "preLaunchTask": "C/C++: g++ build active file",
-            "miDebuggerPath": "/usr/bin/gdb"
-        }
+        
+       
     ],
     "version": "2.0.0"
 }

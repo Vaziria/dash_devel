@@ -1060,7 +1060,7 @@ bool CCoinJoinClientSession::JoinExistingQueue(CAmount nBalanceNeedsAnonymized, 
     const auto mnList = deterministicMNManager->GetListAtChainTip();
     const int nWeightedMnCount = mnList.GetValidWeightedMNsCount();
 
-    LogPrintf("[kampret] new Queue %d\n", nWeightedMnCount);
+    LogPrintf("[kampret] existing %d\n", nWeightedMnCount);
 
     // Look through the queues and see if anything matches
     CCoinJoinQueue dsq;
@@ -1146,7 +1146,13 @@ bool CCoinJoinClientSession::StartNewQueue(CAmount nBalanceNeedsAnonymized, CCon
         }
 
         m_manager.AddUsedMasternode(dmn->collateralOutpoint);
+        
+        int nLastPaidHeight = dmn->pdmnState->nLastPaidHeight;
+        int winnersToSkip = WinnersToSkip();
+        int mnHeight = mnList.GetHeight();
 
+        LogPrintf("[kampret] paidHeight %d, weighted %d winnerToskip %d Height %d \n", nLastPaidHeight, nWeightedMnCount, winnersToSkip, mnHeight);
+        
         // skip next mn payments winners
         if (dmn->pdmnState->nLastPaidHeight + nWeightedMnCount < mnList.GetHeight() + WinnersToSkip()) {
             WalletCJLogPrint(m_wallet, "CCoinJoinClientSession::StartNewQueue -- skipping winner, masternode=%s\n", dmn->proTxHash.ToString());
