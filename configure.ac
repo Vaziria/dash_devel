@@ -1587,6 +1587,16 @@ if test "x$use_ccache" != "xno"; then
   fi
 fi
 
+# argon definition
+
+AM_CONDITIONAL([ARGON2D_NO_OPT],[
+  test x$have_sse2 = xno &&
+  test x$have_ssse3 = xno &&
+  test x$have_avx2 = xno &&
+  test x$have_avx512f = xno])
+
+# argon definition
+
 dnl enable wallet
 AC_MSG_CHECKING([if wallet should be enabled])
 if test x$enable_wallet != xno; then

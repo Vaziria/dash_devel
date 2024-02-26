@@ -591,8 +591,35 @@ crypto_libbitcoin_crypto_base_a_SOURCES = \
   crypto/sha512.h \
   crypto/siphash.cpp \
   crypto/siphash.h \
-  crypto/sha512.h \
-  crypto/yescrypt/yescrypt.c
+  crypto/sha512.h
+
+  # Argon2d
+crypto_libbitcoin_crypto_base_a_SOURCES += \
+  crypto/argon2d/argon2.h \
+  crypto/argon2d/core.h \
+  crypto/argon2d/encoding.h \
+  crypto/argon2d/thread.h \
+  crypto/argon2d/argon2.c \
+  crypto/argon2d/core.c \
+  crypto/argon2d/encoding.c \
+  crypto/argon2d/thread.c
+
+
+if ARGON2D_NO_OPT
+crypto_libbitcoin_crypto_base_a_SOURCES += crypto/argon2d/ref.c
+else
+crypto_libbitcoin_crypto_base_a_SOURCES += crypto/argon2d/opt.c
+endif
+
+
+crypto_libbitcoin_crypto_base_a_SOURCES += \
+  crypto/blake2/blake2b.c \
+  crypto/blake2/blake2-impl.h \
+  crypto/blake2/blake2.h \
+  crypto/blake2/blamka-round-opt.h \
+  crypto/blake2/blamka-round-ref.h 
+
+# crypto/sph_types.h
 
 
 # YescryptR32

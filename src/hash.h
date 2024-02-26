@@ -16,6 +16,8 @@
 #include <uint256.h>
 #include <version.h>
 
+#include "crypto/argon2d/argon2.h"
+#include "crypto/blake2/blake2.h"
 #include <crypto/sph_blake.h>
 #include <crypto/sph_bmw.h>
 #include <crypto/sph_groestl.h>
@@ -31,6 +33,13 @@
 #include <vector>
 
 typedef uint256 ChainCode;
+
+// Bawaan dari argon2d
+static const size_t INPUT_BYTES = 80;  // Lenth of a block header in bytes. Input Length = Salt Length (salt = input)
+static const size_t OUTPUT_BYTES = 32; // Length of output needed for a 256-bit hash
+static const unsigned int DEFAULT_ARGON2_FLAG = 2; //Same as ARGON2_DEFAULT_FLAGS
+// End Bawaan Dari argon2d
+
 
 /* ----------- Bitcoin Hash ------------------------------------------------- */
 /** A hasher class for Bitcoin's 256-bit hash (double SHA-256). */
@@ -242,7 +251,7 @@ uint256 SerializeHash(const T& obj, int nType=SER_GETHASH, int nVersion=PROTOCOL
 
 /* Yescrypt test */
 template<typename T>
-uint256 SerializeHashYescrypt(const T& obj, int nType=SER_GETHASH, int nVersion=PROTOCOL_VERSION)
+uint256 SerializeHashYescrypt_backup(const T& obj, int nType=SER_GETHASH, int nVersion=PROTOCOL_VERSION)
 {
     CHashWriterYescrypt ss(nType, nVersion);
     ss << obj;
@@ -322,5 +331,97 @@ inline uint256 HashX11(const T1 pbegin, const T1 pend)
 
     return hash[10].trim256();
 }
+
+
+// ---------------------------------------------------- argon2d -----------------------------------------------
+inline int Argon2d_Phase1_Hash(const void *in,const size_t size, const void *out) {
+    argon2_context context;
+    context.out = (uint8_t *)out;
+    context.outlen = (uint32_t)OUTPUT_BYTES;
+    context.pwd = (uint8_t *)in;
+    context.pwdlen = (uint32_t)size;
+    context.salt = (uint8_t *)in; //salt = input
+    context.saltlen = (uint32_t)size;
+    context.secret = NULL;
+    context.secretlen = 0;
+    context.ad = NULL;
+    context.adlen = 0;
+    context.allocate_cbk = NULL;
+    context.free_cbk = NULL;
+    context.flags = DEFAULT_ARGON2_FLAG; // = ARGON2_DEFAULT_FLAGS
+    // main configurable Argon2 hash parameters
+    context.m_cost = 250; // Memory in KiB (~256KB)
+    context.lanes = 4;    // Degree of Parallelism
+    context.threads = 1;  // Threads
+    context.t_cost = 1;   // Iterations
+
+    return argon2_ctx(&context, Argon2_d);
+}
+
+    /// Argon2d Phase 2 Hash parameters for the next 5 years after phase 1
+    /// Salt and password are the block header.
+    /// Output length: 32 bytes.
+    /// Input length (in the case of a block header): 80 bytes.
+    /// Salt length (same note as input length): 80 bytes.
+    /// Input: Block header
+    /// Salt: Block header (SAME AS INPUT)
+    /// Secret data: None
+    /// Secret length: 0
+    /// Associated data: None
+    /// Associated data length: 0
+    /// Memory cost: 16000 kibibytes
+    /// Lanes: 1 parallel threads
+    /// Threads: 1 threads
+    /// Time Constraint: 1 iterations
+inline int Argon2d_Phase2_Hash(const void *in, const size_t size, const void *out) {
+    argon2_context context;
+    context.out = (uint8_t *)out;
+    context.outlen = (uint32_t)OUTPUT_BYTES;
+    context.pwd = (uint8_t *)in;
+    context.pwdlen = (uint32_t)size;
+    context.salt = (uint8_t *)in; //salt = input
+    context.saltlen = (uint32_t)size;
+    context.secret = NULL;
+    context.secretlen = 0;
+    context.ad = NULL;
+    context.adlen = 0;
+    context.allocate_cbk = NULL;
+    context.free_cbk = NULL;
+    context.flags = DEFAULT_ARGON2_FLAG; // = ARGON2_DEFAULT_FLAGS
+    // main configurable Argon2 hash parameters
+    context.m_cost = 16000; // Memory in KiB (~16384KB)
+    context.lanes = 1;    // Degree of Parallelism
+    context.threads = 1;   // Threads
+    context.t_cost = 1;    // Iterations
+
+    return argon2_ctx(&context, Argon2_d);
+}
+
+template<typename T1>
+inline uint256 hash_Argon2d(const T1 pbegin, const T1 pend) {
+     static unsigned char pblank[1];
+     const void* input = (pbegin == pend ? pblank : static_cast<const void*>(&pbegin[0]));
+     const size_t size = (pend - pbegin) * sizeof(pbegin[0]);
+
+     uint256 hashResult;
+     const uint32_t MaxInt32 = std::numeric_limits<uint32_t>::max();
+     if (INPUT_BYTES > MaxInt32 || OUTPUT_BYTES > MaxInt32) {
+         return hashResult;
+     }
+    
+    Argon2d_Phase2_Hash((const uint8_t*)input, size, (uint8_t*)&hashResult);
+
+    //  if (hashPhase == 1) {
+    //      Argon2d_Phase1_Hash((const uint8_t*)input, size, (uint8_t*)&hashResult);
+    //  }
+    //  else if (hashPhase == 2) {
+    //      Argon2d_Phase2_Hash((const uint8_t*)input, size, (uint8_t*)&hashResult);
+    //  }
+    //  else {
+    //      Argon2d_Phase1_Hash((const uint8_t*)input, size, (uint8_t*)&hashResult);
+    // }
+    return hashResult;
+}
+
 
 #endif // BITCOIN_HASH_H
