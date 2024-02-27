@@ -266,7 +266,7 @@ public:
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000000000000000"); // 1969000
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x0017fce2ed9ebf99af872cf4f0ac3ca59118e18deedafe24d847498c63ed7df6"); // 1969000
+        consensus.defaultAssumeValid = uint256S("0x000a4d95d44612b068996850d2775543499c1609161c92243cd4f43e418d0bd5"); // 1969000
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
@@ -297,10 +297,10 @@ public:
         // genesisNonce is 1928
         // Genesis Merkle b260f9816a946e07c49343faf8d300e88370ad9de6ce925f0841a9a3aea16e76
 
-        genesis = CreateGenesisBlock(1705981380, 1928, 0x20001fff, 1, 50000 * COIN);
+        genesis = CreateGenesisBlock(1705981380, 1972, 0x20001fff, 1, 50000 * COIN);
         // MiningGenesisBlock(1705981380, 0x20001fff, 1, 50000 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x0017fce2ed9ebf99af872cf4f0ac3ca59118e18deedafe24d847498c63ed7df6"));
+        assert(consensus.hashGenesisBlock == uint256S("0x000a4d95d44612b068996850d2775543499c1609161c92243cd4f43e418d0bd5"));
         assert(genesis.hashMerkleRoot == uint256S("0xb260f9816a946e07c49343faf8d300e88370ad9de6ce925f0841a9a3aea16e76"));
 
         // Note that of those which support the service bits prefix, most only support a subset of
@@ -476,11 +476,11 @@ public:
         // genesisNonce is 2233
         // Genesis Merkle b260f9816a946e07c49343faf8d300e88370ad9de6ce925f0841a9a3aea16e76
 
-        genesis = CreateGenesisBlock(1390666206UL, 2233, 0x20001fff, 1, 50000 * COIN);
+        genesis = CreateGenesisBlock(1390666206UL, 262, 0x20001fff, 1, 50000 * COIN);
         // MiningGenesisBlock(1390666206UL, 0x20001fff, 1, 50000 * COIN);
 
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x0014213d75de11368dd8072d50856b0c5799dab548a2fa58a9f0fea5591fe473"));
+        assert(consensus.hashGenesisBlock == uint256S("0x000d8ab8ba5a08e0f4c49328e763f3fc8cbfd82e5c288ea03c8a93309e9ddb38"));
         assert(genesis.hashMerkleRoot == uint256S("0xb260f9816a946e07c49343faf8d300e88370ad9de6ce925f0841a9a3aea16e76"));
 
         vFixedSeeds.clear();
@@ -917,11 +917,11 @@ public:
         // genesisNonce is 1061
         // Genesis Merkle b260f9816a946e07c49343faf8d300e88370ad9de6ce925f0841a9a3aea16e76
 
-        genesis = CreateGenesisBlock(1417713337, 1061, 0x20001fff, 1, 50000 * COIN);
+        genesis = CreateGenesisBlock(1417713337, 4769, 0x20001fff, 1, 50000 * COIN);
         // MiningGenesisBlock(1417713337, 0x20001fff, 1, 50000 * COIN);
 
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x000198678fb274d47b07d500a45e7fd5dcda745c96a37c11cae45c2bd32b5331"));
+        assert(consensus.hashGenesisBlock == uint256S("0x000901edfd440a8d78787afa9b6d99966e9effe3d7c22146ee00fb932a47f2ec"));
         assert(genesis.hashMerkleRoot == uint256S("0xb260f9816a946e07c49343faf8d300e88370ad9de6ce925f0841a9a3aea16e76"));
 
         vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.
