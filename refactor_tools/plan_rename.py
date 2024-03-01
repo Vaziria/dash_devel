@@ -9,7 +9,7 @@ import shutil
 RENAME_TYPE = "rename"
 REPLACE_TYPE = "replace"
 
-BASE_PLAN = "./workspace/refactor_plan_data"
+BASE_PLAN = "./refactor_plan_data"
 
 def fname_base(*args):
     return os.path.join(BASE_PLAN, *args)
@@ -72,6 +72,7 @@ class PlanItem(BaseModel):
 class PlanTextReplacer(BaseModel):
     texts: List[List[str]]
     skip_ext: List[str]
+    skip_texts: List[str]
     
     
     def find_text(self, plan: PlanItem) -> bool:
@@ -95,7 +96,7 @@ class PlanTextReplacer(BaseModel):
                     if len(groups) == 0:
                         break
                     
-                    found = True
+                    
                     
                     sample = 8
                     start = cocok.start() - sample
@@ -106,6 +107,18 @@ class PlanTextReplacer(BaseModel):
                     
                     samplestr = content[start:cocok.start() + len(text[0]) + sample]
                     samplestr = samplestr.replace("\n", "\\n")
+                    
+                    # check skip text
+                    skip = False
+                    for sktext in self.skip_texts:
+                        if samplestr.find(sktext) != -1:
+                            skip = True
+                            break
+                        
+                    if skip:
+                        break
+                    
+                    found = True
                     rep_item = PlanReplaceItem(sample=samplestr, start=cocok.start(), replace_to=text[1],text=text[0])
                     content = rep_item.replace(content)
                     plan.replaces.append(rep_item)
@@ -250,13 +263,28 @@ class MdWriter:
 
 def main():
     replace_path = [
-        ["dash","tonnage"],   
+        ["dash","unfy"],   
     ]
     
     textreplace = [
-                ["www.dash.org", "kampret.com"],
-                ["dash", "tonnage"],
-            ]
+        ["security@dash.org", "unifyroom@gmail.com"],
+        ["https://github.com/dashpay/dash", "https://github.com/unifyroom/unfy"],
+        ["Dash whitepaper", "Unifyroom whitepaper"],
+        ["Dash Core", "Unifyroom Core"],
+        ["dash core", "unifyroom core"],
+        ["Dash node", "Unifyroom node"],
+        ["Dash Node", "Unifyroom Node"],
+        ["staydashy.com", "linkdiscord.com"],
+        ["dash.org/forum", "linkdiscord.com"],
+        ["https://www.dash.org/downloads/", "https://unifyroom.com/downloads/"],
+        ["https://gitlab.com/dashpay/dash", "https://github.com/unifyroom/unfy"],
+        ["www.dash.org", "unifyroom.com"],
+        ["dash.org", "unifyroom.com"],
+        ["dash", "unfy"],
+        ["Dash", "Unifyroom"],
+        ["DashCrashInfo", "UnfyCrashInfo"],
+        ["Dash", "Unfy"],              
+    ]
 
     ignores = [
         "./.git",
@@ -266,7 +294,9 @@ def main():
         "./refactor_plan_data",
         "./src/univalue/test",
         "./src/immer/test/oss-fuzz/data",
-        "./src/llmq/.deps"
+        "./src/llmq/.deps",
+        "./refactor_plan_data",
+        "./workspace/refactor_plan_data"
     ]
     
     dir_stucture = [
@@ -328,6 +358,10 @@ def main():
                 ".so.0",
                 ".tiff",
             ],
+            skip_texts=[
+                "lodash",
+                "Lodash"
+            ]
         )
     )
     
