@@ -194,7 +194,7 @@ class PlanCreator(BaseModel):
                 break
             
         if found and APPLY:
-            os.rename(item.path.path, item.newpath)
+            shutil.move(item.path.path, item.newpath)
             
         return found
     
@@ -225,9 +225,7 @@ class PlanCreator(BaseModel):
                         is_file=False,
                         path=dirt
                     )
-        
-        for base in base_pool:
-            for root, dirs, files in os.walk(base):
+                    
                 
                 for file in files:
                     
