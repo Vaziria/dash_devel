@@ -136,6 +136,7 @@ class PlanCreator(BaseModel):
     path_replace: List[List[str]]
     base: str
     plan_replacer: PlanTextReplacer
+    hidden_directories: List[str]
         
     def check_rename(self, item: PlanItem) -> bool:
         
@@ -161,35 +162,45 @@ class PlanCreator(BaseModel):
         return False
     
     def iterate_path(self) -> Generator[int, None, None]:
-        for root, dirs, files in os.walk(self.base):
-            
-            for file in files:
+        
+        base_pool = []
+        base_pool.extend(self.hidden_directories)
+        base_pool.append(self.base)
+        
+        for base in base_pool:
+        
+            for root, dirs, files in os.walk(base):
                 
-                
-                file = os.path.join(root, file)
-                if self.check_ignores(file):
-                    continue
-                 
-                yield PlanPath(
-                    is_file=True,
-                    path=file
-                )
-            
-            for dirt in dirs:
-                dirt = os.path.join(root, dirt)
-                if self.check_ignores(dirt):
-                    continue
+                for file in files:
                     
+                    
+                    file = os.path.join(root, file)
+                    
+                    if self.check_ignores(file):
+                        continue
+                    
+                    yield PlanPath(
+                        is_file=True,
+                        path=file
+                    )
                 
-                yield PlanPath(
-                    is_file=False,
-                    path=dirt
-                )
+                for dirt in dirs:
+                    dirt = os.path.join(root, dirt)
+                    
+                    if self.check_ignores(dirt):
+                        continue
+                        
+                    
+                    yield PlanPath(
+                        is_file=False,
+                        path=dirt
+                    )
             
             
     
     def iterate(self):
         
+
         for path in self.iterate_path():
             item = PlanItem(
                 plan_type=RENAME_TYPE,
@@ -292,6 +303,8 @@ def main():
         ["https://gitlab.com/dashpay/dash", "https://github.com/unifyroom/unfy"],
         ["www.dash.org", "unifyroom.com"],
         ["dash.org", "unifyroom.com"],
+        ["dashpay/dashd", "unifyroom/unfyd"],
+        ["DASH", "UNFY"],
         ["dash", "unfy"],
         ["Dash", "Unifyroom"],
         ["DashCrashInfo", "UnfyCrashInfo"],
@@ -299,9 +312,11 @@ def main():
     ]
 
     ignores = [
-        "./.git",
+        "./.git/",
         "./.vscode",
-        "./depends",
+        "./depends/x86_64-pc-linux-gnu/",
+        "./depends/x86_64-w64-mingw32/",
+        "./depends/sources/",
         "./refactor_tools",
         "./refactor_plan_data",
         "./src/univalue/test",
@@ -328,7 +343,7 @@ def main():
     plan = PlanCreator(
         ignores=ignores, 
         path_replace=replace_path, 
-        base=".",
+        base="./",
         plan_replacer=PlanTextReplacer(
             texts=textreplace,
             skip_ext=[
@@ -373,7 +388,10 @@ def main():
                 "lodash",
                 "Lodash"
             ]
-        )
+        ),
+        hidden_directories=[
+            "./.github/"
+        ]
     )
     
     with open(plan_filepath, "w+") as out:
