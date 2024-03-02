@@ -5,7 +5,7 @@ from typing import List, Generator
 import re
 import shutil
 
-APPLY=False
+APPLY=True
 
 
 RENAME_TYPE = "rename"
@@ -146,7 +146,8 @@ def memoize(funcdata):
 
 @memoize
 def makedatadir(path: str):
-    print(path)
+    if os.path.exists(path):
+        return
     return os.makedirs(path)
 
 class Remover(BaseModel):
@@ -190,7 +191,7 @@ class PlanCreator(BaseModel):
                 item.is_ignored = False
                 item.newpath = item.path.path.replace(rep[0], rep[1])
                 found = True
-                return found
+                break
             
         if found and APPLY:
             os.rename(item.path.path, item.newpath)
@@ -254,11 +255,13 @@ class PlanCreator(BaseModel):
                 newpath="", 
                 replaces=[]
             )
-            self.check_rename(item)
+            
             
             if item.path.is_file:
                 if self.plan_replacer.find_text(item):
                     yield item
+                    
+            self.check_rename(item)
             
             if not item.is_ignored:
                 yield item
@@ -460,8 +463,8 @@ def main():
                 
     print(f"plan saved on {plan_filepath}")
     
-    if APPLY:
-        shutil.rmtree(BASE_PLAN)
+    # if APPLY:
+    #     shutil.rmtree(BASE_PLAN)
     
 
 if __name__ == "__main__":
