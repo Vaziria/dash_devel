@@ -77,8 +77,8 @@ static CBlock CreateDevNetGenesisBlock(const uint256 &prevBlockHash, const std::
  */
 static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
-    const char* pszTimestamp = "clown fish";
-    const CScript genesisOutputScript = CScript() << ParseHex("040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9") << OP_CHECKSIG;
+    const char* pszTimestamp = "antemortem and postemortem";
+    const CScript genesisOutputScript = CScript() << ParseHex("044e6e86103257498254e6068cafb72c6bf50b17a18f5f061c514f57eb31792bb84123cb7554d56dc9fcb31d07172ad9e96f4ab32b640f0c0754e9605f8c333642") << OP_CHECKSIG;
     return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward);
 }
 
@@ -193,9 +193,9 @@ class CMainParams : public CChainParams {
 public:
     CMainParams() {
         strNetworkID = CBaseChainParams::MAIN;
-        consensus.nSubsidyHalvingInterval = 210240; // Note: actual number of blocks per calendar year with DGW v3 is ~200700 (for example 449750 - 249050)
+        consensus.nSubsidyHalvingInterval = 262800; // Note: actual number of blocks per calendar year with DGW v3 is ~200700 (for example 449750 - 249050)
         consensus.BIP16Height = 0;
-        consensus.nMasternodePaymentsStartBlock = 100000; // not true, but it's ok as long as it's less then nMasternodePaymentsIncreaseBlock
+        consensus.nMasternodePaymentsStartBlock = 4321; // not true, but it's ok as long as it's less then nMasternodePaymentsIncreaseBlock
         consensus.nMasternodePaymentsIncreaseBlock = 158000; // actual historical value
         consensus.nMasternodePaymentsIncreasePeriod = 576*30; // 17280 - actual historical value
         consensus.nInstantSendConfirmationsRequired = 6;
@@ -208,7 +208,7 @@ public:
         consensus.nSuperblockCycle = 16616; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
         consensus.nSuperblockMaturityWindow = 1662; // ~(60*24*3)/2.6, ~3 days before actual Superblock is emitted
 
-        std::vector<FounderRewardStructure> rewardStructures = {  {INT_MAX, 5} };// 5% founder/dev fee forever
+        std::vector<FounderRewardStructure> rewardStructures = {  {INT_MAX, 10} };// 10 % founder/dev fee forever
         consensus.nFounderPayment = FounderPayment(rewardStructures, 0);
 
         consensus.nGovernanceMinQuorum = 10;
@@ -222,18 +222,18 @@ public:
         consensus.CSVHeight = 622944; // 00000000000002e3d3a6224cfce80bae367fd3283d1e5a8ba50e5e60b2d2905d
         consensus.DIP0001Height = 782208; // 000000000000000cbc9cb551e8ee1ac7aa223585cbdfb755d3683bafd93679e4
         consensus.DIP0003Height = 25; // masternode mulai boleh dibuat
-        consensus.DIP0003MinimumCount = 2;
+        consensus.DIP0003MinimumCount = 10;
         consensus.DIP0003EnforcementHeight = 1047200;
         consensus.DIP0003EnforcementHash = uint256S("000000000000002d1734087b4c5afc3133e4e1c3e1a89218f62bcd9bb3d17f81");
         consensus.DIP0008Height = 1088640; // 00000000000000112e41e4b3afda8b233b8cc07c532d2eac5de097b68358c43e instant send
         consensus.BRRHeight = 1374912; // 000000000000000c5a124f3eccfbe6e17876dca79cec9e63dfa70d269113c926
         consensus.DIP0020Height = 1516032; // 000000000000000f64ed3bd9af1078177ac026f6aa2677aa4d8beeae43be56cc
         consensus.DIP0024Height = 1737792; // 0000000000000001342be9c0b75ad40c276beaad91616423c4d9cb101b3db438
-        consensus.V19Height = 20; // 0000000000000015e32e73052d663626327004c81c5c22cb8b42c361015c0eae height evonode
-        consensus.MinBIP9WarningHeight = 20 + 2016; // V19 activation height + miner confirmation window height evonode
+        consensus.V19Height = 4321; // 0000000000000015e32e73052d663626327004c81c5c22cb8b42c361015c0eae height evonode
+        consensus.MinBIP9WarningHeight = 4321 + 2016; // V19 activation height + miner confirmation window height evonode
         consensus.powLimit = uint256S("00ffffffff000000000000000000000000000000000000000000000000000000"); // ~uint256(0) >> 20
         consensus.nPowTargetTimespan = 24 * 60 * 60; // Dash: 1 day
-        consensus.nPowTargetSpacing = 60; // Dash: 2.5 minutes
+        consensus.nPowTargetSpacing = 120; // Dash: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
         consensus.nPowKGWHeight = 0;
@@ -266,18 +266,18 @@ public:
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000000000000000"); // 1969000
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x0017fce2ed9ebf99af872cf4f0ac3ca59118e18deedafe24d847498c63ed7df6"); // 1969000
+        consensus.defaultAssumeValid = uint256S("0x001c87738f77f0c63e7c0f8da47be2146066927142c373333007b0b0be515c4b"); // 1969000
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
          * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
          * a large 32-bit integer with any alignment.
          */
-        pchMessageStart[0] = 0xbf;
-        pchMessageStart[1] = 0x0c;
-        pchMessageStart[2] = 0x6b;
-        pchMessageStart[3] = 0xbd;
-        nDefaultPort = 9999;
+        pchMessageStart[0] = 0x75;
+        pchMessageStart[1] = 0x6e;
+        pchMessageStart[2] = 0x66;
+        pchMessageStart[3] = 0x79;
+        nDefaultPort = 1464;
         nDefaultPlatformP2PPort = 26656;
         nDefaultPlatformHTTPPort = 443;
         nPruneAfterHeight = 100000;
@@ -297,11 +297,11 @@ public:
         // genesisNonce is 1928
         // Genesis Merkle b260f9816a946e07c49343faf8d300e88370ad9de6ce925f0841a9a3aea16e76
 
-        genesis = CreateGenesisBlock(1705981380, 1928, 0x20001fff, 1, 50000 * COIN);
-        // MiningGenesisBlock(1705981380, 0x20001fff, 1, 50000 * COIN);
+        genesis = CreateGenesisBlock(1705981380, 8588, 0x20001fff, 1, 200 * COIN);
+        // MiningGenesisBlock(1705981380, 0x20001fff, 1, 200 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x0017fce2ed9ebf99af872cf4f0ac3ca59118e18deedafe24d847498c63ed7df6"));
-        assert(genesis.hashMerkleRoot == uint256S("0xb260f9816a946e07c49343faf8d300e88370ad9de6ce925f0841a9a3aea16e76"));
+        assert(consensus.hashGenesisBlock == uint256S("0x001c87738f77f0c63e7c0f8da47be2146066927142c373333007b0b0be515c4b"));
+        assert(genesis.hashMerkleRoot == uint256S("0x83fce268243cb41e0cc266dd0feeb1aa3005c6ad2f5b3ca1ad41427b912826ad"));
 
         // Note that of those which support the service bits prefix, most only support a subset of
         // possible options.
@@ -309,10 +309,10 @@ public:
         // service bits we want, but we should get them updated to support all service bits wanted by any
         // release ASAP to avoid it where possible.
 
-        // vSeeds.emplace_back("dnsseed.dash.org");
+        vSeeds.emplace_back("dnsseed.unifyroom.com");
 
-        // Dash addresses start with 'X'
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,76);
+        // Dash addresses start with 'U'
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,68);
         // Dash script addresses start with '7'
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,16);
         // Dash private keys start with '7' or 'X'
@@ -353,7 +353,7 @@ public:
         nPoolMaxParticipants = 20;
         nFulfilledRequestExpireTime = 60*60; // fulfilled requests expire in 1 hour
 
-        vSporkAddresses = {"Xgtyuk76vhuFW2iT7UAiHgNdWXCf3J34wh"};
+        vSporkAddresses = {"UibNjKRsxwGtS1YTq7aLzaHGihyS2nnYmN"};
         nMinSporkKeys = 1;
 
         checkpointData = {
@@ -453,10 +453,10 @@ public:
         // By default assume that the signatures in ancestors of this block are valid.
         consensus.defaultAssumeValid = uint256S("0014213d75de11368dd8072d50856b0c5799dab548a2fa58a9f0fea5591fe473"); // 905100
 
-        pchMessageStart[0] = 0xce;
-        pchMessageStart[1] = 0xe2;
-        pchMessageStart[2] = 0xca;
-        pchMessageStart[3] = 0xff;
+        pchMessageStart[0] = 0x75;
+        pchMessageStart[1] = 0x6e;
+        pchMessageStart[2] = 0x66;
+        pchMessageStart[3] = 0x79;
         nDefaultPort = 19999;
         nDefaultPlatformP2PPort = 22000;
         nDefaultPlatformHTTPPort = 22001;
@@ -476,12 +476,12 @@ public:
         // genesisNonce is 2233
         // Genesis Merkle b260f9816a946e07c49343faf8d300e88370ad9de6ce925f0841a9a3aea16e76
 
-        genesis = CreateGenesisBlock(1390666206UL, 2233, 0x20001fff, 1, 50000 * COIN);
-        // MiningGenesisBlock(1390666206UL, 0x20001fff, 1, 50000 * COIN);
+        genesis = CreateGenesisBlock(1390666206UL, 3692, 0x20001fff, 1, 200 * COIN);
+        // MiningGenesisBlock(1390666206UL, 0x20001fff, 1, 200 * COIN);
 
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x0014213d75de11368dd8072d50856b0c5799dab548a2fa58a9f0fea5591fe473"));
-        assert(genesis.hashMerkleRoot == uint256S("0xb260f9816a946e07c49343faf8d300e88370ad9de6ce925f0841a9a3aea16e76"));
+        assert(consensus.hashGenesisBlock == uint256S("0x00175ab0623b1c73e44e3be3eda51fb2a5bee253fc41eea0d4e57c0b677f9ee1"));
+        assert(genesis.hashMerkleRoot == uint256S("0x83fce268243cb41e0cc266dd0feeb1aa3005c6ad2f5b3ca1ad41427b912826ad"));
 
         vFixedSeeds.clear();
         // vFixedSeeds = std::vector<uint8_t>(std::begin(chainparams_seed_test), std::end(chainparams_seed_test));
@@ -640,10 +640,10 @@ public:
         // By default assume that the signatures in ancestors of this block are valid.
         consensus.defaultAssumeValid = uint256S("0x000000000000000000000000000000000000000000000000000000000000000");
 
-        pchMessageStart[0] = 0xe2;
-        pchMessageStart[1] = 0xca;
-        pchMessageStart[2] = 0xff;
-        pchMessageStart[3] = 0xce;
+        pchMessageStart[0] = 0x75;
+        pchMessageStart[1] = 0x6e;
+        pchMessageStart[2] = 0x66;
+        pchMessageStart[3] = 0x79;
         nDefaultPort = 19799;
         nDefaultPlatformP2PPort = 22100;
         nDefaultPlatformHTTPPort = 22101;
@@ -889,10 +889,10 @@ public:
         // By default assume that the signatures in ancestors of this block are valid.
         consensus.defaultAssumeValid = uint256S("0x00");
 
-        pchMessageStart[0] = 0xfc;
-        pchMessageStart[1] = 0xc1;
-        pchMessageStart[2] = 0xb7;
-        pchMessageStart[3] = 0xdc;
+        pchMessageStart[0] = 0x75;
+        pchMessageStart[1] = 0x6e;
+        pchMessageStart[2] = 0x66;
+        pchMessageStart[3] = 0x79;
         nDefaultPort = 19899;
         nDefaultPlatformP2PPort = 22200;
         nDefaultPlatformHTTPPort = 22201;
@@ -917,12 +917,12 @@ public:
         // genesisNonce is 1061
         // Genesis Merkle b260f9816a946e07c49343faf8d300e88370ad9de6ce925f0841a9a3aea16e76
 
-        genesis = CreateGenesisBlock(1417713337, 1061, 0x20001fff, 1, 50000 * COIN);
+        genesis = CreateGenesisBlock(1417713337, 708, 0x20001fff, 1, 50000 * COIN);
         // MiningGenesisBlock(1417713337, 0x20001fff, 1, 50000 * COIN);
 
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x000198678fb274d47b07d500a45e7fd5dcda745c96a37c11cae45c2bd32b5331"));
-        assert(genesis.hashMerkleRoot == uint256S("0xb260f9816a946e07c49343faf8d300e88370ad9de6ce925f0841a9a3aea16e76"));
+        assert(consensus.hashGenesisBlock == uint256S("0x000e33029d7fa5866ee608bc03e07bee1176c0433cccad0d5b3d44922532598d"));
+        assert(genesis.hashMerkleRoot == uint256S("0x5fd315b072c6b2e340dd5a1bd50507b95880c6d160fd9e3e9b2add073bfee3dc"));
 
         vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.
         vSeeds.clear();      //!< Regtest mode doesn't have any DNS seeds.
