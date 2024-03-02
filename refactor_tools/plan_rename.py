@@ -5,6 +5,8 @@ from typing import List, Generator
 import re
 import shutil
 
+APPLY=True
+
 
 RENAME_TYPE = "rename"
 REPLACE_TYPE = "replace"
@@ -122,7 +124,10 @@ class PlanTextReplacer(BaseModel):
                     rep_item = PlanReplaceItem(sample=samplestr, start=cocok.start(), replace_to=text[1],text=text[0])
                     content = rep_item.replace(content)
                     plan.replaces.append(rep_item)
-            
+                    
+        if found and APPLY:
+            with open(plan.path.path, 'w+') as out:
+                out.write(content)
 
         return found
 
@@ -133,15 +138,20 @@ class PlanCreator(BaseModel):
     plan_replacer: PlanTextReplacer
         
     def check_rename(self, item: PlanItem) -> bool:
+        
+        found = False
             
         for rep in self.path_replace:
             if item.path.path.find(rep[0]) != -1:
                 item.is_ignored = False
                 item.newpath = item.path.path.replace(rep[0], rep[1])
-                
-                return True
+                found = True
+                return found
             
-        return False
+        if found and APPLY:
+            os.rename(item.path.path, item.newpath)
+            
+        return found
     
     def check_ignores(self, path: str):
         for c in self.ignores:
@@ -152,17 +162,6 @@ class PlanCreator(BaseModel):
     
     def iterate_path(self) -> Generator[int, None, None]:
         for root, dirs, files in os.walk(self.base):
-            
-            for dirt in dirs:
-                dirt = os.path.join(root, dirt)
-                if self.check_ignores(dirt):
-                    continue
-                    
-                
-                yield PlanPath(
-                    is_file=False,
-                    path=dirt
-                )
             
             for file in files:
                 
@@ -175,6 +174,19 @@ class PlanCreator(BaseModel):
                     is_file=True,
                     path=file
                 )
+            
+            for dirt in dirs:
+                dirt = os.path.join(root, dirt)
+                if self.check_ignores(dirt):
+                    continue
+                    
+                
+                yield PlanPath(
+                    is_file=False,
+                    path=dirt
+                )
+            
+            
     
     def iterate(self):
         
@@ -312,7 +324,6 @@ def main():
             os.makedirs(fname_base(dirstruc))
         
     plan_filepath = fname_base("plan_refactor.jsonlist")
-    plan_preview = fname_base("plan_refactor.md")
     
     plan = PlanCreator(
         ignores=ignores, 
@@ -377,6 +388,9 @@ def main():
             print("planning", item.path.path)
                 
     print(f"plan saved on {plan_filepath}")
+    
+    if APPLY:
+        shutil.rmtree(BASE_PLAN)
     
 
 if __name__ == "__main__":
