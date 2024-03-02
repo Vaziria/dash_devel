@@ -5,7 +5,7 @@ from typing import List, Generator
 import re
 import shutil
 
-APPLY=True
+APPLY=False
 
 
 RENAME_TYPE = "rename"
@@ -131,12 +131,55 @@ class PlanTextReplacer(BaseModel):
 
         return found
 
+
+def memoize(funcdata):
+    data = {}
+    def memofunc(path: str):
+        if data.get(path, False) == False:
+            hasil = funcdata(path)
+            data[path] = True
+            return hasil
+        
+        return None
+        
+    return memofunc
+
+@memoize
+def makedatadir(path: str):
+    print(path)
+    return os.makedirs(path)
+
+class Remover(BaseModel):
+    backup_remover: str
+    data: List[str]
+    
+    def check(self, path: str) -> bool:
+        
+        for prefix in self.data:
+            if path.startswith(prefix):
+                
+                if APPLY:
+                    path = path.lstrip("./")
+                    newpath = fname_base(self.backup_remover, path)
+                    dirname = os.path.dirname(newpath)
+                    print("deleting", path)
+                    makedatadir(dirname)
+                    os.rename(path, newpath)
+                    
+                    
+                return True
+        
+        return False
+
 class PlanCreator(BaseModel):
     ignores: List[str]
     path_replace: List[List[str]]
     base: str
     plan_replacer: PlanTextReplacer
     hidden_directories: List[str]
+    remover: Remover
+    
+    
         
     def check_rename(self, item: PlanItem) -> bool:
         
@@ -173,8 +216,10 @@ class PlanCreator(BaseModel):
                 
                 for file in files:
                     
-                    
                     file = os.path.join(root, file)
+                    
+                    if self.remover.check(file):
+                        continue
                     
                     if self.check_ignores(file):
                         continue
@@ -290,20 +335,22 @@ def main():
     ]
     
     textreplace = [
-        ["security@dash.org", "unifyroom@gmail.com"],
-        ["https://github.com/dashpay/dash", "https://github.com/unifyroom/unfy"],
+        ["security@dash.org", "unifyroomcoin@gmail.com"],
+        ["https://github.com/dashpay/dash", "https://github.com/unifyroom/unifycoin"],
         ["Dash whitepaper", "Unifyroom whitepaper"],
         ["Dash Core", "Unifyroom Core"],
         ["dash core", "unifyroom core"],
         ["Dash node", "Unifyroom node"],
         ["Dash Node", "Unifyroom Node"],
-        ["staydashy.com", "linkdiscord.com"],
-        ["dash.org/forum", "linkdiscord.com"],
-        ["https://www.dash.org/downloads/", "https://unifyroom.com/downloads/"],
-        ["https://gitlab.com/dashpay/dash", "https://github.com/unifyroom/unfy"],
+        ["staydashy.com", "https://discord.gg/gsMznV3q"],
+        ["dash.org/forum", "https://discord.gg/gsMznV3q"],
+        ["https://www.dash.org/downloads/", "https://github.com/unifyroom/unifycoin/releases"],
+        ["https://gitlab.com/dashpay/dash", "https://github.com/unifyroom/unifycoin"],
         ["www.dash.org", "unifyroom.com"],
         ["dash.org", "unifyroom.com"],
-        ["dashpay/dashd", "unifyroom/unfyd"],
+        ["dashpay/dashd", "unifyroom/unifycoin"],
+        ["dashpay", "unifyroom"],
+        ["Dashpay", "Unifyroom"],
         ["DASH", "UNFY"],
         ["dash", "unfy"],
         ["Dash", "Unifyroom"],
@@ -391,7 +438,13 @@ def main():
         ),
         hidden_directories=[
             "./.github/"
-        ]
+        ],
+        remover=Remover(
+            backup_remover="backup_delete",
+            data=[
+                "./doc/release-notes/dash/"
+            ]
+        )
     )
     
     with open(plan_filepath, "w+") as out:
