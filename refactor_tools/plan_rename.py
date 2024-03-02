@@ -212,7 +212,21 @@ class PlanCreator(BaseModel):
         base_pool.append(self.base)
         
         for base in base_pool:
+            for root, dirs, files in os.walk(base):
+                
+                for dirt in dirs:
+                    dirt = os.path.join(root, dirt)
+                    
+                    if self.check_ignores(dirt):
+                        continue
+                        
+                    
+                    yield PlanPath(
+                        is_file=False,
+                        path=dirt
+                    )
         
+        for base in base_pool:
             for root, dirs, files in os.walk(base):
                 
                 for file in files:
@@ -229,18 +243,10 @@ class PlanCreator(BaseModel):
                         is_file=True,
                         path=file
                     )
+            
+        
                 
-                for dirt in dirs:
-                    dirt = os.path.join(root, dirt)
-                    
-                    if self.check_ignores(dirt):
-                        continue
-                        
-                    
-                    yield PlanPath(
-                        is_file=False,
-                        path=dirt
-                    )
+                
             
             
     
