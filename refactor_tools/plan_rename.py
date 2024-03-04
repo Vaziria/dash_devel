@@ -5,7 +5,7 @@ from typing import List, Generator
 import re
 import shutil
 
-APPLY=True
+APPLY=False
 
 
 RENAME_TYPE = "rename"
