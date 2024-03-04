@@ -7,7 +7,7 @@
 Tests correspond to code in rpc/net.cpp.
 """
 
-from test_framework.test_framework import DashTestFramework
+from test_framework.test_framework import UnifyroomTestFramework
 from test_framework.util import (
     assert_equal,
     assert_greater_than_or_equal,
@@ -36,9 +36,9 @@ def assert_net_servicesnames(servicesflag, servicenames):
     assert servicesflag_generated == servicesflag
 
 
-class NetTest(DashTestFramework):
+class NetTest(UnifyroomTestFramework):
     def set_test_params(self):
-        self.set_dash_test_params(3, 1, fast_dip3_enforcement=True)
+        self.set_unfy_test_params(3, 1, fast_dip3_enforcement=True)
         self.supports_cli = False
 
     def run_test(self):

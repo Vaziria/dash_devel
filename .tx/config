@@ -1,7 +1,7 @@
 [main]
 host = https://www.transifex.com
 
-[dash.dash_ents]
-file_filter = src/qt/locale/dash_<lang>.ts
-source_file = src/qt/locale/dash_en.xlf
+[unfy.unfy_ents]
+file_filter = src/qt/locale/unfy_<lang>.ts
+source_file = src/qt/locale/unfy_en.xlf
 source_lang = en

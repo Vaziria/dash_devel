@@ -1,37 +1,37 @@
-Dash Core
+Unifyroom Core
 ==========
 
-This is the official reference wallet for Dash digital currency and comprises the backbone of the Dash peer-to-peer network. You can [download Dash Core](https://www.dash.org/downloads/) or [build it yourself](#building) using the guides below.
+This is the official reference wallet for Unifyroom digital currency and comprises the backbone of the Unifyroom peer-to-peer network. You can [download Unifyroom Core](https://github.com/unifyroom/unifycoin/releases) or [build it yourself](#building) using the guides below.
 
 Running
 ---------------------
-The following are some helpful notes on how to run Dash Core on your native platform.
+The following are some helpful notes on how to run Unifyroom Core on your native platform.
 
 ### Unix
 
 Unpack the files into a directory and run:
 
-- `bin/dash-qt` (GUI) or
-- `bin/dashd` (headless)
+- `bin/unfy-qt` (GUI) or
+- `bin/unfyd` (headless)
 
 ### Windows
 
-Unpack the files into a directory, and then run dash-qt.exe.
+Unpack the files into a directory, and then run unfy-qt.exe.
 
 ### macOS
 
-Drag Dash Core to your applications folder, and then run Dash Core.
+Drag Unifyroom Core to your applications folder, and then run Unifyroom Core.
 
 ### Need Help?
 
-* See the [Dash documentation](https://docs.dash.org)
+* See the [Unifyroom documentation](https://docs.unifyroom.com)
 for help and more information.
-* Ask for help on [Dash Discord](http://staydashy.com)
-* Ask for help on the [Dash Forum](https://dash.org/forum)
+* Ask for help on [Unifyroom Discord](http://https://discord.gg/gsMznV3q)
+* Ask for help on the [Unifyroom Forum](https://https://discord.gg/gsMznV3q)
 
 Building
 ---------------------
-The following are developer notes on how to build Dash Core on your native platform. They are not complete guides, but include notes on the necessary libraries, compile flags, etc.
+The following are developer notes on how to build Unifyroom Core on your native platform. They are not complete guides, but include notes on the necessary libraries, compile flags, etc.
 
 - [Dependencies](dependencies.md)
 - [macOS Build Notes](build-osx.md)
@@ -43,7 +43,7 @@ The following are developer notes on how to build Dash Core on your native platf
 
 Development
 ---------------------
-The Dash Core repo's [root README](/README.md) contains relevant information on the development process and automated testing.
+The Unifyroom Core repo's [root README](/README.md) contains relevant information on the development process and automated testing.
 
 - [Developer Notes](developer-notes.md)
 - [Productivity Notes](productivity.md)
@@ -60,15 +60,15 @@ The Dash Core repo's [root README](/README.md) contains relevant information on 
 - [Benchmarking](benchmarking.md)
 
 ### Resources
-* See the [Dash Developer Documentation](https://dashcore.readme.io/)
+* See the [Unifyroom Developer Documentation](https://unfycore.readme.io/)
   for technical specifications and implementation details.
-* Discuss on the [Dash Forum](https://dash.org/forum), in the Development & Technical Discussion board.
-* Discuss on [Dash Discord](http://staydashy.com)
-* Discuss on [Dash Developers Discord](http://chat.dashdevs.org/)
+* Discuss on the [Unifyroom Forum](https://https://discord.gg/gsMznV3q), in the Development & Technical Discussion board.
+* Discuss on [Unifyroom Discord](http://https://discord.gg/gsMznV3q)
+* Discuss on [Unifyroom Developers Discord](http://chat.unfydevs.org/)
 
 ### Miscellaneous
 - [Assets Attribution](assets-attribution.md)
-- [dash.conf Configuration File](dash-conf.md)
+- [unfy.conf Configuration File](unfy-conf.md)
 - [Files](files.md)
 - [Fuzz-testing](fuzzing.md)
 - [I2P Support](i2p.md)

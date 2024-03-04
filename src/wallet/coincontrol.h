@@ -101,7 +101,7 @@ public:
         vOutpoints.assign(setSelected.begin(), setSelected.end());
     }
 
-    // Dash-specific helpers
+    // Unifyroom-specific helpers
 
     void UseCoinJoin(bool fUseCoinJoin)
     {

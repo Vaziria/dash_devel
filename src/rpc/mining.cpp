@@ -1,6 +1,6 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2020 The Bitcoin Core developers
-// Copyright (c) 2014-2023 The Dash Core developers
+// Copyright (c) 2014-2023 The Unifyroom Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -432,7 +432,7 @@ static UniValue generatetoaddress(const JSONRPCRequest& request)
         RPCExamples{
     "\nGenerate 11 blocks to myaddress\n"
     + HelpExampleCli("generatetoaddress", "11 \"myaddress\"")
-        + "If you are running the Dash Core wallet, you can get a new address to send the newly generated coins to with:\n"
+        + "If you are running the Unifyroom Core wallet, you can get a new address to send the newly generated coins to with:\n"
             + HelpExampleCli("getnewaddress", "")},
     }.Check(request);
 

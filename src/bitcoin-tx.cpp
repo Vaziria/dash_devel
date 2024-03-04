@@ -102,11 +102,11 @@ static int AppInitRawTx(int argc, char* argv[])
 
     if (argc < 2 || HelpRequested(gArgs) || gArgs.IsArgSet("-version")) {
         // First part of help message is specific to this utility
-        std::string strUsage = PACKAGE_NAME " dash-tx utility version " + FormatFullVersion() + "\n";
+        std::string strUsage = PACKAGE_NAME " unfy-tx utility version " + FormatFullVersion() + "\n";
         if (!gArgs.IsArgSet("-version")) {
             strUsage += "\n"
-                "Usage:  dash-tx [options] <hex-tx> [commands]  Update hex-encoded dash transaction\n"
-                "or:     dash-tx [options] -create [commands]   Create hex-encoded dash transaction\n"
+                "Usage:  unfy-tx [options] <hex-tx> [commands]  Update hex-encoded unfy transaction\n"
+                "or:     unfy-tx [options] -create [commands]   Create hex-encoded unfy transaction\n"
                 "\n";
             strUsage += gArgs.GetHelpMessage();
         }
@@ -743,7 +743,7 @@ static int CommandLineRawTx(int argc, char* argv[])
             if (argc < 2)
                 throw std::runtime_error("too few parameters");
 
-            // param: hex-encoded dash transaction
+            // param: hex-encoded unfy transaction
             std::string strHexTx(argv[1]);
             if (strHexTx == "-")                 // "-" implies standard input
                 strHexTx = readStdin();

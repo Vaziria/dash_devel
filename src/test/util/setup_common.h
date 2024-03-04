@@ -1,5 +1,5 @@
 // Copyright (c) 2015-2020 The Bitcoin Core developers
-// Copyright (c) 2014-2022 The Dash Core developers
+// Copyright (c) 2014-2022 The Unifyroom Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -69,9 +69,9 @@ static inline bool InsecureRandBool() { return g_insecure_rand_ctx.randbool(); }
 
 static constexpr CAmount CENT{1000000};
 
-/* Initialize Dash-specific components after chainstate initialization */
-void DashTestSetup(NodeContext& node);
-void DashTestSetupClose(NodeContext& node);
+/* Initialize Unifyroom-specific components after chainstate initialization */
+void UnifyroomTestSetup(NodeContext& node);
+void UnifyroomTestSetupClose(NodeContext& node);
 
 /** Basic testing setup.
  * This just configures logging, data dir and chain parameters.

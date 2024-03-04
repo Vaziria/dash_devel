@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2015-2022 The Dash Core developers
+# Copyright (c) 2015-2022 The Unifyroom Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -12,13 +12,13 @@ Checks intra quorum connections
 
 import time
 
-from test_framework.test_framework import DashTestFramework
+from test_framework.test_framework import UnifyroomTestFramework
 from test_framework.util import assert_greater_than_or_equal, wait_until
 
-class LLMQConnections(DashTestFramework):
+class LLMQConnections(UnifyroomTestFramework):
     def set_test_params(self):
-        self.set_dash_test_params(15, 14, fast_dip3_enforcement=True)
-        self.set_dash_llmq_test_params(5, 3)
+        self.set_unfy_test_params(15, 14, fast_dip3_enforcement=True)
+        self.set_unfy_llmq_test_params(5, 3)
         # Probes should age after this many seconds.
         # NOTE: mine_quorum() can bump mocktime quite often internally so make sure this number is high enough.
         self.MAX_AGE = int(120 * self.options.timeout_factor)

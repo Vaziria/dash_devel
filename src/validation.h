@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2020 The Bitcoin Core developers
-// Copyright (c) 2014-2022 The Dash Core developers
+// Copyright (c) 2014-2022 The Unifyroom Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -579,7 +579,7 @@ private:
     //! Manages the UTXO set, which is a reflection of the contents of `m_chain`.
     std::unique_ptr<CoinsViews> m_coins_views;
 
-    //! Dash
+    //! Unifyroom
     const std::unique_ptr<llmq::CChainLocksHandler>& m_clhandler;
     const std::unique_ptr<llmq::CInstantSendManager>& m_isman;
     const std::unique_ptr<llmq::CQuorumBlockProcessor>& m_quorum_block_processor;

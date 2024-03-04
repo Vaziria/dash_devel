@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2022-2023 The Dash Core developers
+# Copyright (c) 2022-2023 The Unifyroom Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -25,7 +25,7 @@ import requests
 import hjson
 
 def get_label(pr_num):
-    return requests.get(f'https://api.github.com/repos/dashpay/dash/pulls/{pr_num}').json()['head']['label']
+    return requests.get(f'https://api.github.com/repos/unifyroom/unfy/pulls/{pr_num}').json()['head']['label']
 
 def main():
     if len(sys.argv) != 2:
@@ -49,7 +49,7 @@ def main():
         this_pr_num = conflict['number']
         print(this_pr_num)
 
-        r = requests.get(f'https://api.github.com/repos/dashpay/dash/pulls/{this_pr_num}')
+        r = requests.get(f'https://api.github.com/repos/unifyroom/unfy/pulls/{this_pr_num}')
         print(r.json()['head']['label'])
 
         mergable_state = r.json()['mergeable_state']
@@ -57,7 +57,7 @@ def main():
             print(f'{this_pr_num} needs rebase. Skipping conflict check')
             continue
 
-        r = requests.get(f'https://github.com/dashpay/dash/branches/pre_mergeable/{our_pr_label}...{get_label(this_pr_num)}')
+        r = requests.get(f'https://github.com/unifyroom/unifycoin/branches/pre_mergeable/{our_pr_label}...{get_label(this_pr_num)}')
         if "These branches can be automatically merged." in r.text:
             good.append(this_pr_num)
         elif "Can’t automatically merge" in r.text:

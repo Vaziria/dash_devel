@@ -6,18 +6,18 @@ define(_CLIENT_VERSION_RC, 0)
 define(_CLIENT_VERSION_IS_RELEASE, true)
 define(_COPYRIGHT_YEAR, 2023)
 define(_COPYRIGHT_HOLDERS,[The %s developers])
-define(_COPYRIGHT_HOLDERS_SUBSTITUTION,[[Dash Core]])
-AC_INIT([Dash Core],m4_join([.], _CLIENT_VERSION_MAJOR, _CLIENT_VERSION_MINOR, _CLIENT_VERSION_BUILD)m4_if(_CLIENT_VERSION_RC, [0], [], [rc]_CLIENT_VERSION_RC),[https://github.com/dashpay/dash/issues],[dashcore],[https://dash.org/])
+define(_COPYRIGHT_HOLDERS_SUBSTITUTION,[[Unifyroom Core]])
+AC_INIT([Unifyroom Core],m4_join([.], _CLIENT_VERSION_MAJOR, _CLIENT_VERSION_MINOR, _CLIENT_VERSION_BUILD)m4_if(_CLIENT_VERSION_RC, [0], [], [rc]_CLIENT_VERSION_RC),[https://github.com/unifyroom/unifycoin/issues],[unfycore],[https://unifyroom.com/])
 AC_CONFIG_SRCDIR([src/validation.cpp])
 AC_CONFIG_HEADERS([src/config/bitcoin-config.h])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([build-aux/m4])
 
-BITCOIN_DAEMON_NAME=dashd
-BITCOIN_GUI_NAME=dash-qt
-BITCOIN_CLI_NAME=dash-cli
-BITCOIN_TX_NAME=dash-tx
-BITCOIN_WALLET_TOOL_NAME=dash-wallet
+BITCOIN_DAEMON_NAME=unfyd
+BITCOIN_GUI_NAME=unfy-qt
+BITCOIN_CLI_NAME=unfy-cli
+BITCOIN_TX_NAME=unfy-tx
+BITCOIN_WALLET_TOOL_NAME=unfy-wallet
 
 dnl Unless the user specified ARFLAGS, force it to be cr
 dnl This is also the default as-of libtool 2.4.7
@@ -28,9 +28,9 @@ fi
 
 AC_CANONICAL_HOST
 
-AH_TOP([#ifndef DASH_CONFIG_H])
-AH_TOP([#define DASH_CONFIG_H])
-AH_BOTTOM([#endif //DASH_CONFIG_H])
+AH_TOP([#ifndef UNFY_CONFIG_H])
+AH_TOP([#define UNFY_CONFIG_H])
+AH_BOTTOM([#endif //UNFY_CONFIG_H])
 
 dnl faketime breaks configure and is only needed for make. Disable it here.
 unset FAKETIME
@@ -633,25 +633,25 @@ CPPFLAGS="$CPPFLAGS -DHAVE_BUILD_INFO"
 
 AC_ARG_WITH([utils],
   [AS_HELP_STRING([--with-utils],
-  [build dash-cli dash-tx dash-wallet (default=yes)])],
+  [build unfy-cli unfy-tx unfy-wallet (default=yes)])],
   [build_bitcoin_utils=$withval],
   [build_bitcoin_utils=yes])
 
 AC_ARG_ENABLE([util-cli],
   [AS_HELP_STRING([--enable-util-cli],
-  [build dash-cli])],
+  [build unfy-cli])],
   [build_bitcoin_cli=$enableval],
   [build_bitcoin_cli=$build_bitcoin_utils])
 
 AC_ARG_ENABLE([util-tx],
   [AS_HELP_STRING([--enable-util-tx],
-  [build dash-tx])],
+  [build unfy-tx])],
   [build_bitcoin_tx=$enableval],
   [build_bitcoin_tx=$build_bitcoin_utils])
 
 AC_ARG_ENABLE([util-wallet],
   [AS_HELP_STRING([--enable-util-wallet],
-  [build dash-wallet])],
+  [build unfy-wallet])],
   [build_bitcoin_wallet=$enableval],
   [build_bitcoin_wallet=$build_bitcoin_utils])
 
@@ -663,7 +663,7 @@ AC_ARG_WITH([libs],
 
 AC_ARG_WITH([daemon],
   [AS_HELP_STRING([--with-daemon],
-  [build dashd daemon (default=yes)])],
+  [build unfyd daemon (default=yes)])],
   [build_bitcoind=$withval],
   [build_bitcoind=yes])
 
@@ -1419,7 +1419,7 @@ define(MINIMUM_REQUIRED_BOOST, 1.64.0)
 dnl Check for Boost libs
 AX_BOOST_BASE([MINIMUM_REQUIRED_BOOST])
 if test x$want_boost = xno; then
-    AC_MSG_ERROR([[only libdashconsensus can be built without boost]])
+    AC_MSG_ERROR([[only libunfyconsensus can be built without boost]])
 fi
 AX_BOOST_FILESYSTEM
 AX_BOOST_THREAD
@@ -1541,19 +1541,19 @@ dnl check if libgmp is present
 AC_CHECK_HEADER([gmp.h],, AC_MSG_ERROR(libgmp headers missing))
 AC_CHECK_LIB([gmp],  [__gmpz_init],GMP_LIBS=-lgmp, AC_MSG_ERROR(libgmp missing))
 
-AC_MSG_CHECKING([whether to build dashd])
+AC_MSG_CHECKING([whether to build unfyd])
 AM_CONDITIONAL([BUILD_BITCOIND], [test x$build_bitcoind = xyes])
 AC_MSG_RESULT($build_bitcoind)
 
-AC_MSG_CHECKING([whether to build dash-cli])
+AC_MSG_CHECKING([whether to build unfy-cli])
 AM_CONDITIONAL([BUILD_BITCOIN_CLI], [test x$build_bitcoin_cli = xyes])
 AC_MSG_RESULT($build_bitcoin_cli)
 
-AC_MSG_CHECKING([whether to build dash-tx])
+AC_MSG_CHECKING([whether to build unfy-tx])
 AM_CONDITIONAL([BUILD_BITCOIN_TX], [test x$build_bitcoin_tx = xyes])
 AC_MSG_RESULT($build_bitcoin_tx)
 
-AC_MSG_CHECKING([whether to build dash-wallet])
+AC_MSG_CHECKING([whether to build unfy-wallet])
 AM_CONDITIONAL([BUILD_BITCOIN_WALLET], [test x$build_bitcoin_wallet = xyes])
 AC_MSG_RESULT($build_bitcoin_wallet)
 
@@ -1561,7 +1561,7 @@ AC_MSG_CHECKING([whether to build libraries])
 AM_CONDITIONAL([BUILD_BITCOIN_LIBS], [test x$build_bitcoin_libs = xyes])
 if test x$build_bitcoin_libs = xyes; then
   AC_DEFINE(HAVE_CONSENSUS_LIB, 1, [Define this symbol if the consensus lib has been built])
-  AC_CONFIG_FILES([libdashconsensus.pc:libdashconsensus.pc.in])
+  AC_CONFIG_FILES([libunfyconsensus.pc:libunfyconsensus.pc.in])
 fi
 AC_MSG_RESULT($build_bitcoin_libs)
 
@@ -1683,7 +1683,7 @@ if test x$bitcoin_enable_qt != xno; then
     AC_MSG_WARN("xgettext is required to update qt translations")
   fi
 
-  AC_MSG_CHECKING([whether to build test_dash-qt])
+  AC_MSG_CHECKING([whether to build test_unfy-qt])
   if test x$use_gui_tests$bitcoin_enable_qt_test = xyesyes; then
     AC_MSG_RESULT([yes])
     BUILD_TEST_QT="yes"
@@ -1694,7 +1694,7 @@ fi
 
 AM_CONDITIONAL([ENABLE_ZMQ], [test "x$use_zmq" = "xyes"])
 
-AC_MSG_CHECKING([whether to build test_dash])
+AC_MSG_CHECKING([whether to build test_unfy])
 if test x$use_tests = xyes; then
   if test "x$enable_fuzz" = "xyes"; then
     AC_MSG_RESULT([no, because fuzzing is enabled])
@@ -1872,7 +1872,7 @@ unset PKG_CONFIG_LIBDIR
 PKG_CONFIG_LIBDIR="$PKGCONFIG_LIBDIR_TEMP"
 
 ac_configure_args="${ac_configure_args} --disable-shared --with-pic --enable-benchmark=no --enable-module-recovery --disable-openssl-tests"
-AC_CONFIG_SUBDIRS([src/dashbls src/secp256k1])
+AC_CONFIG_SUBDIRS([src/unfybls src/secp256k1])
 
 AC_OUTPUT
 
@@ -1899,7 +1899,7 @@ echo "  with zmq            = $use_zmq"
 if test x$enable_fuzz == xno; then
     echo "  with test     = $use_tests"
 else
-    echo "  with test     = not building test_dash because fuzzing is enabled"
+    echo "  with test     = not building test_unfy because fuzzing is enabled"
     echo "    with fuzz   = $enable_fuzz"
 fi
 echo "  with bench    = $use_bench"

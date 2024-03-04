@@ -12,7 +12,7 @@ race:validation_chainstatemanager_tests
 # WalletBatch (unidentified deadlock)
 deadlock:WalletBatch
 
-# deadlock false positive (see: https://github.com/dashpay/dash/pull/4563)
+# deadlock false positive (see: https://github.com/unifyroom/unifycoin/pull/4563)
 deadlock:CChainState::ConnectTip
 
 # Intentional deadlock in tests

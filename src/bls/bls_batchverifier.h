@@ -1,9 +1,9 @@
-// Copyright (c) 2018-2022 The Dash Core developers
+// Copyright (c) 2018-2022 The Unifyroom Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef DASH_CRYPTO_BLS_BATCHVERIFIER_H
-#define DASH_CRYPTO_BLS_BATCHVERIFIER_H
+#ifndef UNFY_CRYPTO_BLS_BATCHVERIFIER_H
+#define UNFY_CRYPTO_BLS_BATCHVERIFIER_H
 
 #include <bls/bls.h>
 
@@ -237,4 +237,4 @@ private:
     }
 };
 
-#endif //DASH_CRYPTO_BLS_BATCHVERIFIER_H
+#endif //UNFY_CRYPTO_BLS_BATCHVERIFIER_H

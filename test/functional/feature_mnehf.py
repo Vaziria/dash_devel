@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright (c) 2023 The Dash Core developers
+# Copyright (c) 2023 The Unifyroom Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -16,17 +16,17 @@ from test_framework.messages import (
     ser_string,
 )
 
-from test_framework.test_framework import DashTestFramework
+from test_framework.test_framework import UnifyroomTestFramework
 from test_framework.util import (
     assert_equal,
     assert_greater_than,
     get_bip9_details,
 )
 
-class MnehfTest(DashTestFramework):
+class MnehfTest(UnifyroomTestFramework):
     def set_test_params(self):
         extra_args = [["-vbparams=testdummy:0:999999999999:12:12:12:5:1", "-persistmempool=0"] for _ in range(4)]
-        self.set_dash_test_params(4, 3, fast_dip3_enforcement=True, extra_args=extra_args)
+        self.set_unfy_test_params(4, 3, fast_dip3_enforcement=True, extra_args=extra_args)
 
     def skip_test_if_missing_module(self):
         self.skip_if_no_wallet()

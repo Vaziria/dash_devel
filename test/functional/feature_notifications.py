@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # Copyright (c) 2014-2016 The Bitcoin Core developers
-# Copyright (c) 2023 The Dash Core developers
+# Copyright (c) 2023 The Unifyroom Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test the -alertnotify, -blocknotify, -chainlocknotify, -instantsendnotify and -walletnotify options."""
 import os
 
 from test_framework.address import ADDRESS_BCRT1_UNSPENDABLE
-from test_framework.test_framework import DashTestFramework
+from test_framework.test_framework import UnifyroomTestFramework
 from test_framework.util import (
     assert_equal,
     force_finish_mnsync,
@@ -25,9 +25,9 @@ def notify_outputname(walletname, txid):
     return txid if os.name == 'nt' else '{}_{}'.format(walletname, txid)
 
 
-class NotificationsTest(DashTestFramework):
+class NotificationsTest(UnifyroomTestFramework):
     def set_test_params(self):
-        self.set_dash_test_params(5, 3, fast_dip3_enforcement=True)
+        self.set_unfy_test_params(5, 3, fast_dip3_enforcement=True)
 
     def setup_network(self):
         self.wallet = ''.join(chr(i) for i in range(FILE_CHAR_START, FILE_CHAR_END) if chr(i) not in FILE_CHARS_DISALLOWED)

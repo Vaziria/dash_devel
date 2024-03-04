@@ -14,17 +14,17 @@ reset-files.bash
 *.tar.gz
 
 *.exe
-src/dash
-src/dashd
-src/dash-cli
-src/dash-tx
-src/dash-wallet
+src/unfy
+src/unfyd
+src/unfy-cli
+src/unfy-tx
+src/unfy-wallet
 src/test/fuzz/*
 !src/test/fuzz/*.*
-src/test/test_dash
-src/qt/test/test_dash-qt
+src/test/test_unfy
+src/qt/test/test_unfy-qt
 src/qt/res/css/colors/*
-src/bench/bench_dash
+src/bench/bench_unfy
 
 # autoreconf
 Makefile.in
@@ -101,15 +101,15 @@ libconftest.dylib*
 *.qm
 Makefile
 !depends/Makefile
-dash-qt
-Dash-Qt.app
+unfy-qt
+Unifyroom-Qt.app
 
 # Qt Creator
 Makefile.am.user
 
 # Unit-tests
 Makefile.test
-dash-qt_test
+unfy-qt_test
 
 # Resources cpp
 qrc_*.cpp
@@ -126,7 +126,7 @@ releases
 *.gcno
 *.gcda
 /*.info
-test_dash.coverage/
+test_unfy.coverage/
 total.coverage/
 coverage_percent.txt
 
@@ -144,15 +144,15 @@ test/cache/*
 .autotools
 /doc/doxygen/
 
-libdashconsensus.pc
+libunfyconsensus.pc
 contrib/devtools/split-debug.sh
-src/qt/dash-qt.bash
+src/qt/unfy-qt.bash
 qa/pull-tester/tests-config.sh
 
 #development symlinks
-dash-cli
-dashd
-dash-qt
+unfy-cli
+unfyd
+unfy-qt
 make
 
 /docker/bin
